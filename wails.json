@@ -1,0 +1,20 @@
+{
+  "$schema": "https://wails.io/schemas/config.v2.json",
+  "name": "HRMS",
+  "outputfilename": "HRMS",
+  "frontend:install": "pnpm i",
+  "frontend:build": "pnpm build",
+  "frontend:dev:watcher": "pnpm serve",
+  "frontend:dev:serverUrl": "http://localhost:5173/",
+  "wailsjsdir": "frontend/src",
+  "author": {
+    "name": "Ghostbb-io",
+    "email": "mucgll0328@ghostbb.net"
+  },
+  "info": {
+    "productName": "HRMS",
+    "productVersion": "1.1.2",
+    "copyright": "Ghostbb",
+    "comments": "Human Resources Management System"
+  }
+}

@@ -16,6 +16,7 @@ import { RouteRecordRaw } from 'vue-router';
 import { PAGE_NOT_FOUND_ROUTE } from '@/router/routes/basic';
 import { isArray } from '@/utils/is';
 import { h } from 'vue';
+import { Quit } from '@/wailsjs/runtime';
 
 interface EmployeeState {
   employeeInfo: Nullable<EmployeeInfo>;
@@ -165,6 +166,23 @@ export const useEmployeeStore = defineStore({
         onOk: async () => {
           // 主动登出，不带redirect地址
           await this.logout(true);
+        },
+      });
+    },
+
+    /**
+     * @description: Comfirm before exit system
+     */
+    confirmExit() {
+      const { createConfirm } = useMessage();
+      const { t } = useI18n();
+      createConfirm({
+        iconType: 'warning',
+        title: () => h('span', t('sys.app.logoutTip')),
+        content: () => h('span', t('sys.app.exitMessage')),
+        onOk: async () => {
+          await this.logout(true);
+          Quit();
         },
       });
     },

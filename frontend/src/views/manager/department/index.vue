@@ -3,7 +3,7 @@
     <BasicTable @register="registerTable">
       <template #toolbar>
         <a-button type="primary" @click="handleCreate">
-          {{ '新增菜單' }}
+          {{ '新增部門' }}
         </a-button>
       </template>
 
@@ -13,7 +13,7 @@
             :actions="[
               {
                 icon: 'clarity:note-edit-line',
-                onClick: handleEdit.bind(null, record as MenuModel),
+                onClick: handleEdit.bind(null, record as DepartmentModel),
               },
               {
                 icon: 'ant-design:delete-outlined',
@@ -21,7 +21,7 @@
                 popConfirm: {
                   title: '刪除',
                   placement: 'left',
-                  confirm: handleDelete.bind(null, record as MenuModel),
+                  confirm: handleDelete.bind(null, record as DepartmentModel),
                 },
               },
             ]"
@@ -29,22 +29,22 @@
         </template>
       </template>
     </BasicTable>
-    <MenuDrawer @register="registerDrawer" @success="handleSuccess" />
+    <DeptModal @register="registerModal" @success="handleSuccess" />
   </div>
 </template>
 
 <script lang="ts" setup>
   import { ref } from 'vue';
   import { BasicTable, useTable, TableAction } from '@/components/Table';
-  import { getMenuByKeyword, deleteMenu } from '@/api/manager/menu';
-  import { GetMenuByKeywordParams, MenuModel, ShowType } from '@/api/manager/model/menuModel';
-  import { columns, searchFormSchema } from '../data';
+  import { useModal } from '@/components/Modal';
   import { useMessage } from '@/hooks/web/useMessage';
-  import { useDrawer } from '@/components/Drawer';
-  import MenuDrawer from './MenuDrawer.vue';
+  import DeptModal from './DeptModal.vue';
+  import { columns, searchFormSchema } from './data';
+  import { deleteDepartment, getDepartmentByKeyword } from '@/api/manager/department';
+  import { DepartmentModel } from '@/api/manager/model/departmentModal';
 
   defineOptions({
-    name: 'MenuSoftwareManager',
+    name: 'DepartmentManagement',
     inheritAttrs: false,
   });
 
@@ -60,37 +60,35 @@
   //-編輯和新增用的下拉式選單option
   const selectOption = ref<option[]>([]);
 
-  //-drawer初始化
-  const [registerDrawer, { openDrawer }] = useDrawer();
+  //-modal註冊
+  const [registerModal, { openModal }] = useModal();
 
   //-table設定
   const [registerTable, { reload, setLoading }] = useTable({
-    title: '菜單列表',
-    columns,
-    api: getMenuByKeyword,
-    beforeFetch: (params: GetMenuByKeywordParams) => {
-      params.show = ShowType.SOFTWARE;
-    },
-    afterFetch: (record: MenuModel[]) => {
+    title: '部門列表',
+    api: getDepartmentByKeyword,
+    afterFetch: (record: DepartmentModel[]) => {
       setOption(record);
       return record;
     },
-    pagination: false, //-不分頁
-    isTreeTable: true,
+    columns,
+    formConfig: {
+      labelWidth: 120,
+      schemas: searchFormSchema,
+      autoSubmitOnEnter: true,
+    },
+    pagination: false,
     striped: false,
+    useSearchForm: true,
     showTableSetting: true,
     bordered: true,
     showIndexColumn: false,
     canResize: true,
-    useSearchForm: true,
-    formConfig: {
-      schemas: searchFormSchema,
-      autoSubmitOnEnter: true,
-    },
     actionColumn: {
       width: 80,
       title: '操作',
       dataIndex: 'action',
+      // slots: { customRender: 'action' },
       fixed: undefined,
     },
   });
@@ -99,24 +97,28 @@
    * @description 新增按鈕事件
    */
   const handleCreate = () => {
-    openDrawer(true, { isUpdate: false, treeData: selectOption.value });
+    openModal(true, { isUpdate: false, treeData: selectOption.value });
   };
 
   /**
    * @description 編輯按鈕事件
-   * @param record: GetMenuByKeywordModel
+   * @param record: DepartmentModel
    */
-  const handleEdit = (record: MenuModel) => {
-    openDrawer(true, { record, isUpdate: true, treeData: selectOption.value });
+  const handleEdit = (record: DepartmentModel) => {
+    openModal(true, {
+      record,
+      isUpdate: true,
+      treeData: selectOption.value,
+    });
   };
 
   /**
    * @description 刪除按鈕事件
-   * @param record: GetMenuByKeywordModel
+   * @param record: DepartmentModel
    */
-  const handleDelete = (record: MenuModel) => {
+  const handleDelete = (record: DepartmentModel) => {
     setLoading(true);
-    deleteMenu(record.ID)
+    deleteDepartment(record.ID)
       .then(() => {
         useMessage().createMessage.success({ content: '刪除成功' });
         reload();
@@ -140,16 +142,23 @@
    * @description 設定編輯和新增用的下拉式選單的option
    * @param record
    */
-  const setOption = (record: MenuModel[]) => {
+  const setOption = (record: DepartmentModel[]) => {
     // 使用BFS(廣度優先搜尋演算法)
     // 這裡是陣列樹, 第一層搜尋會有差別外, 其餘演算法一樣
 
-    selectOption.value = [];
-    const recordQueue: MenuModel[] = [];
+    selectOption.value = [{ label: '無', value: 0 }];
+    const recordQueue: DepartmentModel[] = [];
     const optionQueue: option[] = [];
+
+    // 一棵樹情況下只需放入root
+    // 但這邊是陣列的樹, 這邊對演算法做一點修改
+    // 使用迴圈將每棵樹的root放入
+    // 模擬將陣列樹合併, 利用迴圈偽造出一個root
+
     //-第一層遍歷(root遍歷)
     record.forEach((e) => {
-      selectOption.value.push({ label: e.meta?.title, value: e.ID });
+      //-只放入type為資料夾
+      selectOption.value.push({ label: e.name, value: e.ID });
 
       if (e.children) {
         //-如果有子節點的話
@@ -171,8 +180,9 @@
     //-queue
     while (recordQueue.length !== 0) {
       const recordTemp = recordQueue.pop()!;
+
       const optionTemp = optionQueue.pop()!;
-      optionTemp.label = recordTemp?.meta?.title;
+      optionTemp.label = recordTemp?.name;
       optionTemp.value = recordTemp?.ID;
 
       //-遍歷子節點, 做法跟遍歷root一樣

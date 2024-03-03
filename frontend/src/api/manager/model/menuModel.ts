@@ -17,7 +17,6 @@ export interface GetMenuByKeywordParams {
 
 /**
  * @description Menu interface result
- * @field menus MenuModel[]
  */
 export interface MenuModel extends BasicDatabaseModel {
   type?: string;

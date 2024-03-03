@@ -15,14 +15,15 @@
   import { ref, computed, unref } from 'vue';
   import { BasicForm, useForm } from '@/components/Form/index';
   import { BasicDrawer, useDrawerInner } from '@/components/Drawer';
-  import { formSchema } from '../data';
+  import { formSchema } from './data';
   import { createMenu, updateMenu } from '@/api/manager/menu';
   import { MenuModel, ShowType } from '@/api/manager/model/menuModel';
 
   const emit = defineEmits(['register', 'success']);
 
-  const isUpdate = ref(true);
-  const record = ref<MenuModel>();
+  const isUpdate = ref(true); //-新增視窗或編輯視窗
+  const record = ref<MenuModel>(); //-傳入的table參數
+  const showType = ref<ShowType>(); //-軟體端或網頁端
 
   //-form設定
   const [registerForm, { resetFields, setFieldsValue, updateSchema, validate }] = useForm({
@@ -37,6 +38,7 @@
     resetFields();
     setDrawerProps({ confirmLoading: false });
     isUpdate.value = !!data?.isUpdate;
+    showType.value = data.showType;
 
     //-如果是要編輯菜單的話，把值塞進form
     if (unref(isUpdate)) {
@@ -64,7 +66,7 @@
 
       //-往下執行代表通過
       setDrawerProps({ confirmLoading: true });
-      values.show = ShowType.SOFTWARE; //-軟體用menu
+      values.show = showType.value; //-寫入show type
       //-number格式
       //-猜測套件問題有時候number會變成string, 需手動轉回來
       values.sort = Number(values.sort);
@@ -73,10 +75,6 @@
         await createMenu(values as MenuModel);
       } else {
         //-編輯
-        // //-將原有database model塞入
-        // values.ID = record.value?.ID;
-        // values.CreatedAt = record.value?.CreatedAt;
-        //-寫入顯示於software
         await updateMenu(record.value!.ID, values as MenuModel);
       }
       closeDrawer();

@@ -25,14 +25,25 @@
           icon="ant-design:swap-outlined"
         />
         <MenuItem
+          key="logout"
+          :text="t('layout.header.dropdownItemLoginOut')"
+          icon="ion:log-out-outline"
+        />
+        <Menu.Divider />
+        <MenuItem
+          key="reload"
+          :text="t('layout.header.dropdownReload')"
+          icon="ion:refresh-outline"
+        />
+        <MenuItem
           v-if="getUseLockPage"
           key="lock"
           :text="t('layout.header.tooltipLock')"
           icon="ion:lock-closed-outline"
         />
         <MenuItem
-          key="logout"
-          :text="t('layout.header.dropdownItemLoginOut')"
+          key="exit"
+          :text="t('layout.header.dropdownItemExitSystem')"
           icon="ion:power-outline"
         />
       </Menu>
@@ -55,8 +66,9 @@
   import { propTypes } from '@/utils/propTypes';
   import { openWindow } from '@/utils';
   import { createAsyncComponent } from '@/utils/factory/createAsyncComponent';
+  import { WindowReload } from '@/wailsjs/runtime/runtime';
 
-  type MenuEvent = 'logout' | 'doc' | 'lock' | 'api';
+  type MenuEvent = 'logout' | 'doc' | 'lock' | 'api' | 'exit' | 'reload';
 
   const MenuItem = createAsyncComponent(() => import('./DropMenuItem.vue'));
   const LockAction = createAsyncComponent(() => import('../lock/LockModal.vue'));
@@ -94,6 +106,16 @@
     employeeStore.confirmLoginOut();
   }
 
+  // exit
+  function handleExit() {
+    employeeStore.confirmExit();
+  }
+
+  // reload
+  function handleReload() {
+    WindowReload();
+  }
+
   // open doc
   function openDoc() {
     openWindow(DOC_URL);
@@ -101,6 +123,12 @@
 
   function handleMenuClick(e: MenuInfo) {
     switch (e.key as MenuEvent) {
+      case 'exit':
+        handleExit();
+        break;
+      case 'reload':
+        handleReload();
+        break;
       case 'logout':
         handleLoginOut();
         break;

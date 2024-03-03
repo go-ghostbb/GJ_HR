@@ -3,4 +3,4 @@ serve:
 serve-skipbindings:
 	wails dev -s -debounce 1000 -skipbindings -frontenddevserverurl "http://localhost:5173/"
 wails-build:
-	wails build -nsis -clean
+	wails build -nsis -clean -platform windows/amd64

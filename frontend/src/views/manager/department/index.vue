@@ -2,7 +2,7 @@
   <div>
     <BasicTable @register="registerTable">
       <template #toolbar>
-        <a-button type="primary" @click="handleCreate">
+        <a-button v-auth="'department:create'" type="primary" @click="handleCreate">
           {{ '新增部門' }}
         </a-button>
       </template>
@@ -12,10 +12,12 @@
           <TableAction
             :actions="[
               {
+                auth: 'department:edit',
                 icon: 'clarity:note-edit-line',
                 onClick: handleEdit.bind(null, record as DepartmentModel),
               },
               {
+                auth: 'department:delete',
                 icon: 'ant-design:delete-outlined',
                 color: 'error',
                 popConfirm: {
@@ -41,10 +43,10 @@
   import DeptModal from './DeptModal.vue';
   import { columns, searchFormSchema } from './data';
   import { deleteDepartment, getDepartmentByKeyword } from '@/api/manager/department';
-  import { DepartmentModel } from '@/api/manager/model/departmentModal';
+  import { DepartmentModel } from '@/api/manager/model/departmentModel';
 
   defineOptions({
-    name: 'DepartmentManagement',
+    name: 'DepartmentManager',
     inheritAttrs: false,
   });
 

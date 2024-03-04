@@ -1,6 +1,6 @@
 import { defHttp } from '@/utils/http/axios';
 import { ErrorMessageMode } from '#/axios';
-import { DepartmentModel, GetDepartmentByKeywordParams } from './model/departmentModal';
+import { DepartmentModel, GetDepartmentByKeywordParams } from './model/departmentModel';
 
 /**
  * @description 根據keyword獲取department

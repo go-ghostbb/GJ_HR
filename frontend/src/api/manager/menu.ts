@@ -7,7 +7,7 @@ import { MenuModel, GetMenuByKeywordParams } from './model/menuModel';
  * @param params 查詢參數
  */
 export function getMenuByKeyword(
-  params: GetMenuByKeywordParams,
+  params?: GetMenuByKeywordParams,
   mode: ErrorMessageMode = 'message',
 ) {
   return defHttp.get<MenuModel[]>(

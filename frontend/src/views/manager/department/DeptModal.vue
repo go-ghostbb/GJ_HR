@@ -19,7 +19,7 @@
   import { BasicForm, useForm } from '@/components/Form/index';
   import { formSchema } from './data';
   import EmployeePicker from './components/EmployeePicker.vue';
-  import { DepartmentModel } from '@/api/manager/model/departmentModal';
+  import { DepartmentModel } from '@/api/manager/model/departmentModel';
   import { createDepartment, updateDepartment } from '@/api/manager/department';
 
   const emit = defineEmits(['success', 'register']);
@@ -43,10 +43,10 @@
     setModalProps({ confirmLoading: false });
     isUpdate.value = !!data?.isUpdate;
 
-    //-如果是要編輯菜單的話，把值塞進form
+    //-如果是要編輯的話，把值塞進form
     if (unref(isUpdate)) {
       record.value = data?.record;
-      employeePickerRef.value.setRealName(data?.record.manager.realName);
+      employeePickerRef.value.setRealName(data?.record?.manager?.realName);
       setFieldsValue({ ...record.value });
     } else {
       record.value = { ID: 0 };

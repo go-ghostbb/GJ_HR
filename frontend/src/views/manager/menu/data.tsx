@@ -4,6 +4,7 @@ import Icon from '@/components/Icon/Icon.vue';
 import { Switch } from 'ant-design-vue';
 import dayjs from 'dayjs';
 import { setStatus } from '@/api/manager/menu';
+import { usePermission } from '@/hooks/web/usePermission';
 
 const isDir = (type: string) => type === 'directory';
 const isMenu = (type: string) => type === 'menu';
@@ -49,6 +50,7 @@ export const columns: BasicColumn[] = [
     customRender: ({ record }) => {
       return (
         <Switch
+          disabled={!usePermission().hasPermission('menu:update:status')}
           checked={record.status}
           checkedChildren={'啟用'}
           unCheckedChildren={'禁用'}

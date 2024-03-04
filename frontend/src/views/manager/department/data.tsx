@@ -3,6 +3,7 @@ import { useMessage } from '@/hooks/web/useMessage';
 import dayjs from 'dayjs';
 import { Switch } from 'ant-design-vue';
 import { setStatus } from '@/api/manager/department';
+import { usePermission } from '@/hooks/web/usePermission';
 
 export const columns: BasicColumn[] = [
   {
@@ -25,6 +26,7 @@ export const columns: BasicColumn[] = [
     customRender: ({ record }) => {
       return (
         <Switch
+          disabled={!usePermission().hasPermission('department:update:status')}
           checked={record.status}
           checkedChildren={'啟用'}
           unCheckedChildren={'禁用'}

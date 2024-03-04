@@ -2,7 +2,7 @@
   <div>
     <BasicTable @register="registerTable">
       <template #toolbar>
-        <a-button type="primary" @click="handleCreate">
+        <a-button v-auth="'menu:create'" type="primary" @click="handleCreate">
           {{ '新增菜單' }}
         </a-button>
       </template>
@@ -25,10 +25,12 @@
           <TableAction
             :actions="[
               {
+                auth: 'menu:edit',
                 icon: 'clarity:note-edit-line',
                 onClick: handleEdit.bind(null, record as MenuModel),
               },
               {
+                auth: 'menu:delete',
                 icon: 'ant-design:delete-outlined',
                 color: 'error',
                 popConfirm: {
@@ -120,7 +122,7 @@
 
   /**
    * @description 編輯按鈕事件
-   * @param record: GetMenuByKeywordModel
+   * @param record GetMenuByKeywordModel
    */
   const handleEdit = (record: MenuModel) => {
     openDrawer(true, {
@@ -133,7 +135,7 @@
 
   /**
    * @description 刪除按鈕事件
-   * @param record: GetMenuByKeywordModel
+   * @param record GetMenuByKeywordModel
    */
   const handleDelete = (record: MenuModel) => {
     setLoading(true);
@@ -216,7 +218,7 @@
       if (recordTemp.type === 'directory') {
         const optionTemp = optionQueue.pop()!;
         optionTemp.label = recordTemp?.meta?.title;
-        optionTemp.value = recordTemp?.ID;
+        optionTemp.value = recordTemp.ID;
 
         //-遍歷子節點, 做法跟遍歷root一樣
         if (recordTemp.children) {

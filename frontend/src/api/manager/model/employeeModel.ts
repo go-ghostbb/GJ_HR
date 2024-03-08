@@ -1,5 +1,12 @@
-import { BasicDatabaseModel } from '@/api/model/baseModel';
+import { BasicDatabaseModel, BasicPageParams } from '@/api/model/baseModel';
 import { RoleModel } from './roleModel';
+import { DepartmentModel } from './departmentModel';
+
+export enum EmploymentStatus {
+  Active = 'active',
+  UnpaidLeave = 'unpaid leave',
+  Resigned = 'resigned',
+}
 
 /**
  * @description Employee interface result
@@ -18,6 +25,7 @@ export interface EmployeeModel extends BasicDatabaseModel {
   loginInformation?: LoginInformationModel;
   roles?: RoleModel[];
   departmentId?: number;
+  department?: DepartmentModel;
 }
 
 /**
@@ -33,8 +41,16 @@ export interface LoginInformationModel extends BasicDatabaseModel {
 /**
  * @description GetEmployeeByKeyword interface parameters
  */
-export interface GetEmployeeByKeywordParams {
+export interface GetEmployeeByKeywordParams extends BasicPageParams {
   keyword?: string;
   employmentStatus?: string;
   departmentId?: number;
+}
+
+/**
+ * @description ResetPassword interface parameters
+ */
+export interface ResetPasswordParams {
+  password: string;
+  verifyPassword: string;
 }

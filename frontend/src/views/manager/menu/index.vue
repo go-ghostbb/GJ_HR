@@ -93,6 +93,7 @@
       setOption(record);
       return record;
     },
+    rowKey: 'ID',
     pagination: false, //-不分頁
     isTreeTable: true,
     striped: false,

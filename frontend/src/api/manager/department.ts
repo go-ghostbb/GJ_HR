@@ -7,7 +7,7 @@ import { DepartmentModel, GetDepartmentByKeywordParams } from './model/departmen
  * @param params 查詢參數
  */
 export function getDepartmentByKeyword(
-  params: GetDepartmentByKeywordParams,
+  params?: GetDepartmentByKeywordParams,
   mode: ErrorMessageMode = 'message',
 ) {
   return defHttp.get<DepartmentModel[]>(

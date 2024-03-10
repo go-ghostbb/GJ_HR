@@ -27,7 +27,9 @@
           </div>
           <div :class="`${prefixCls}-form-item`" style="display: flex; flex-direction: row">
             <Divider type="vertical" />
-            <div style="flex-direction: column">
+
+            <!-- 把form item獨立成一個區塊, 為了讓form item垂直且並排divider -->
+            <div>
               <!-- 給假開始日input -->
               <FormItem
                 class="ml-1"
@@ -50,6 +52,7 @@
                 <Input v-model:value="item.result" suffix="天" />
               </FormItem>
             </div>
+
             <!-- 刪除年資 -->
             <div class="ml-3" style="display: flex; align-items: center">
               <Button type="text" danger @click="handleRemove(index)">
@@ -151,8 +154,8 @@
     //-群組ID
     leaveGroupId.value = data.leaveGroupId;
 
-    //-獲取condition
-    const conditionList: LeaveGroupConditionModel[] = data.condition;
+    //-獲取condition(深拷貝)
+    const conditionList: LeaveGroupConditionModel[] = JSON.parse(JSON.stringify(data.condition));
 
     //-otherCond設定
     conditionList.forEach((cond) => {

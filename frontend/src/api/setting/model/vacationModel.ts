@@ -1,0 +1,21 @@
+import { BasicDatabaseModel, BasicPageParams } from '@/api/model/baseModel';
+import { VacationScheduleModel } from './vacationScheduleModel';
+import { VacationOvertimeRateModel } from './vacationGroupOvertimeRateModel';
+
+export interface VacationModel extends BasicDatabaseModel {
+  code?: string;
+  name?: string;
+  status?: boolean;
+  remark?: string;
+  color?: string;
+  schedule?: VacationScheduleModel[];
+  overtimeRate?: VacationOvertimeRateModel[];
+}
+
+/**
+ * @description GetVacationByKeyword interface parameters
+ */
+export interface GetVacationByKeywordParams extends BasicPageParams {
+  keyword?: string;
+  status?: string;
+}

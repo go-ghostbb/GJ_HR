@@ -34,6 +34,7 @@ import { IconPicker } from '@/components/Icon';
 import { CountdownInput } from '@/components/CountDown';
 import { BasicTitle } from '@/components/Basic';
 import { CropperAvatar } from '@/components/Cropper';
+import { ColorPicker } from '@/components/ColorPicker';
 
 const componentMap = new Map<ComponentType | string, Component>();
 
@@ -78,6 +79,8 @@ componentMap.set('Divider', Divider);
 componentMap.set('CropperAvatar', CropperAvatar);
 
 componentMap.set('BasicTitle', BasicTitle);
+
+componentMap.set('ColorPicker', ColorPicker);
 
 export function add<T extends string, R extends Component>(
   compName: ComponentType | T,

@@ -1,6 +1,6 @@
 import { BasicDatabaseModel, BasicPageParams } from '@/api/model/baseModel';
 import { VacationScheduleModel } from './vacationScheduleModel';
-import { VacationOvertimeRateModel } from './vacationGroupOvertimeRateModel';
+import { VacationGroupOvertimeRateModel } from './vacationGroupOvertimeRateModel';
 
 export interface VacationModel extends BasicDatabaseModel {
   code?: string;
@@ -9,7 +9,7 @@ export interface VacationModel extends BasicDatabaseModel {
   remark?: string;
   color?: string;
   schedule?: VacationScheduleModel[];
-  overtimeRate?: VacationOvertimeRateModel[];
+  overtimeRate?: VacationGroupOvertimeRateModel[];
 }
 
 /**

@@ -12,16 +12,18 @@
 </template>
 
 <script lang="ts" setup>
-  import { createGroup } from '@/api/setting/leave';
-  import { LeaveGroupModel } from '@/api/setting/model/leaveGroupModel';
+  import { createGroup, setVacationName } from '@/api/setting/vacation';
+  import { VacationGroupModel } from '@/api/setting/model/vacationGroupModel';
   import { useForm, BasicForm } from '@/components/Form';
   import { useModalInner, BasicModal } from '@/components/Modal';
   import { computed, ref, unref } from 'vue';
+  import { useMessage } from '@/hooks/web/useMessage';
 
   const emit = defineEmits(['success', 'register']);
 
   const isUpdate = ref(true);
-  const leaveId = ref(0);
+  const vacationId = ref(0);
+  const groupId = ref(0);
 
   //-modal title
   const getTitle = computed(() => (!unref(isUpdate) ? '新增群組' : '編輯群組'));
@@ -50,9 +52,10 @@
     setModalProps({ confirmLoading: false });
 
     isUpdate.value = !!data?.isUpdate;
-    leaveId.value = data.leaveId;
+    vacationId.value = data.vacationId;
 
     if (unref(isUpdate)) {
+      groupId.value = data.record.ID;
       setFieldsValue({
         ...data.record,
       });
@@ -66,12 +69,17 @@
     try {
       setModalProps({ confirmLoading: true });
       //-驗證表單
-      const values: LeaveGroupModel = await validate();
+      const values: VacationGroupModel = await validate();
 
-      values.leaveId = leaveId.value;
+      values.vacationId = vacationId.value;
 
-      await createGroup(values);
+      if (!unref(isUpdate)) {
+        await createGroup(values);
+      } else {
+        await setVacationName(groupId.value, values.name!);
+      }
 
+      useMessage().createMessage.success({ content: '操作成功' });
       emit('success');
       closeModal();
     } finally {

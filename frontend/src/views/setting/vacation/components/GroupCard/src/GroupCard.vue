@@ -14,8 +14,16 @@
 
           <tbody>
             <tr v-for="(record, index) in dataSource" :key="`groupTable-${index}`">
-              <td>{{ record.name }}</td>
+              <!-- 群組名稱 -->
+              <td>
+                {{ record.name }}
+                <EditOutlined style="color: #a9a9a9; cursor: pointer" @click="handleEdit(record)" />
+              </td>
+
+              <!-- 員工人數 -->
               <td>{{ record.employee?.length }}位</td>
+
+              <!-- action -->
               <td>
                 <TableAction
                   :actions="[
@@ -55,7 +63,7 @@
       </a-button>
     </div>
 
-    <CreateVacationGroupModal @register="registerCreateModal" @success="reload" />
+    <VacationGroupModal @register="registerGroupModal" @success="reload" />
     <OvertimeRateDrawer @register="registerRateDrawer" @success="reload" />
     <EmployeeModal @register="registerEmployeeModal" @success="reload" />
   </div>
@@ -65,14 +73,15 @@
   import { TableAction } from '@/components/Table';
   import { onMounted, ref } from 'vue';
   import { useDesign } from '@/hooks/web/useDesign';
-  import { PlusCircleOutlined } from '@ant-design/icons-vue';
+  import { PlusCircleOutlined, EditOutlined } from '@ant-design/icons-vue';
   import { VacationGroupModel } from '@/api/setting/model/vacationGroupModel';
   import { deleteGroup, getVacationGroup } from '@/api/setting/vacation';
-  import CreateVacationGroupModal from './CreateVacationGroupModal.vue';
+  import VacationGroupModal from './VacationGroupModal.vue';
   import OvertimeRateDrawer from './OvertimeRateDrawer.vue';
   import EmployeeModal from './EmployeeModal.vue';
   import { useModal } from '@/components/Modal';
   import { useDrawer } from '@/components/Drawer';
+  import { useMessage } from '@/hooks/web/useMessage';
 
   const { prefixCls } = useDesign('vacation-group-card');
 
@@ -80,8 +89,8 @@
     vacationId: number;
   }
 
-  //-註冊CreateVacationGroupModal(建立群組)
-  const [registerCreateModal, createMethods] = useModal();
+  //-註冊VacationGroupModal(建立群組)
+  const [registerGroupModal, groupMethods] = useModal();
   //-註冊OvertimeRateDrawer(設定條件)
   const [registerRateDrawer, rateMethods] = useDrawer();
   //-註冊EmployeeModal(設定員工)
@@ -114,7 +123,14 @@
    * @description 點擊新增事件
    */
   const handleCreate = () => {
-    createMethods.openModal(true, { isUpdate: false, vacationId: props.vacationId });
+    groupMethods.openModal(true, { isUpdate: false, vacationId: props.vacationId });
+  };
+
+  /**
+   * @description 點擊編輯事件
+   */
+  const handleEdit = (record: VacationGroupModel) => {
+    groupMethods.openModal(true, { isUpdate: true, vacationId: props.vacationId, record });
   };
 
   /**
@@ -148,6 +164,7 @@
     loading.value = true;
     deleteGroup(record.ID)
       .then(() => {
+        useMessage().createMessage.success({ content: '刪除成功' });
         reload();
       })
       .finally(() => {

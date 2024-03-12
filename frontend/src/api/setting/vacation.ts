@@ -4,13 +4,17 @@ import { GetVacationByKeywordParams, VacationModel } from './model/vacationModel
 import { BasicFetchResult } from '../model/baseModel';
 import { VacationGroupOvertimeRateModel } from './model/vacationGroupOvertimeRateModel';
 import { VacationGroupModel } from './model/vacationGroupModel';
+import {
+  GetVacationScheduleByDateParams,
+  VacationScheduleModel,
+} from './model/vacationScheduleModel';
 
 /**
  * @description 根據keyword獲取vacation
  * @param params 查詢參數
  */
 export function getVacationByKeyword(
-  params: GetVacationByKeywordParams,
+  params?: GetVacationByKeywordParams,
   mode: ErrorMessageMode = 'message',
 ) {
   return defHttp.get<BasicFetchResult<VacationModel>>(
@@ -124,7 +128,7 @@ export function setVacationGroupEmployee(
 /**
  * @description 設置群組的加班倍率區間
  * @param id group id
- * @param condition condition list
+ * @param overtimeRate rate list
  * @param mode error mode
  * @returns Promise
  */
@@ -135,6 +139,85 @@ export function setVacationGroupOvertimeRate(
 ) {
   return defHttp.patch(
     { url: `/v1/vacation/group/${id}/condition`, params: { overtimeRate } },
+    { errorMessageMode: mode },
+  );
+}
+
+/**
+ * @description 設置群組的名稱
+ * @param id group id
+ * @param name group name
+ * @param mode error mode
+ * @returns Promise
+ */
+export function setVacationName(id: number, name: string, mode: ErrorMessageMode = 'message') {
+  return defHttp.patch(
+    { url: `/v1/vacation/group/${id}/name`, params: { name } },
+    { errorMessageMode: mode },
+  );
+}
+
+/**
+ * @description 根據start, end日期區間獲取schedule
+ * @param params start, end
+ * @param mode error mode
+ * @returns Promise
+ */
+export function getVacationScheduleByDate(
+  params: GetVacationScheduleByDateParams,
+  mode: ErrorMessageMode = 'message',
+) {
+  return defHttp.get<VacationScheduleModel[]>(
+    { url: `/v1/vacation/schedule`, params },
+    { errorMessageMode: mode },
+  );
+}
+
+/**
+ * @description 創建schedule
+ * @param params VacationScheduleModel
+ * @param mode error mode
+ * @returns Promise
+ */
+export function createVacationSchedule(
+  params: VacationScheduleModel,
+  mode: ErrorMessageMode = 'message',
+) {
+  return defHttp.post({ url: `/v1/vacation/schedule`, params }, { errorMessageMode: mode });
+}
+
+/**
+ * @description 根據generalKeyg更新schedule
+ * @param generalKey key
+ * @param params VacationScheduleModel
+ * @param mode error mode
+ * @returns Promise
+ */
+export function updateVacationSchedule(
+  generalKey: string,
+  params: VacationScheduleModel,
+  mode: ErrorMessageMode = 'message',
+) {
+  return defHttp.put(
+    { url: `/v1/vacation/schedule/${generalKey}`, params },
+    { errorMessageMode: mode },
+  );
+}
+
+/**
+ * @description 刪除schedule
+ * @param id schedule id
+ * @param repeat 是否刪除重複
+ * @param mode error mode
+ * @returns Promise
+ */
+export function deleteVacationSchedule(
+  id: number,
+  repeat: boolean,
+  mode: ErrorMessageMode = 'message',
+) {
+  return defHttp.delete(
+    { url: `/v1/vacation/schedule/${id}?repeat=${repeat}` },
     { errorMessageMode: mode },
   );
 }

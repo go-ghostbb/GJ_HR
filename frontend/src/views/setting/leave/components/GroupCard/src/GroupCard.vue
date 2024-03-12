@@ -14,8 +14,16 @@
 
           <tbody>
             <tr v-for="(record, index) in dataSource" :key="`groupTable-${index}`">
-              <td>{{ record.name }}</td>
+              <!-- 群組名稱 -->
+              <td>
+                {{ record.name }}
+                <EditOutlined style="color: #a9a9a9; cursor: pointer" @click="handleEdit(record)" />
+              </td>
+
+              <!-- 員工人數 -->
               <td>{{ record.employee?.length }}位</td>
+
+              <!-- action -->
               <td>
                 <TableAction
                   :actions="[
@@ -55,7 +63,7 @@
       </a-button>
     </div>
 
-    <CreateLeaveGroupModal @register="registerCreateModal" @success="reload" />
+    <LeaveGroupModal @register="registerGroupModal" @success="reload" />
     <ConditionDrawer @register="registerCondDrawer" @success="reload" />
     <EmployeeModal @register="registerEmployeeModal" @success="reload" />
   </div>
@@ -65,14 +73,15 @@
   import { TableAction } from '@/components/Table';
   import { onMounted, ref } from 'vue';
   import { useDesign } from '@/hooks/web/useDesign';
-  import { PlusCircleOutlined } from '@ant-design/icons-vue';
+  import { PlusCircleOutlined, EditOutlined } from '@ant-design/icons-vue';
   import { LeaveGroupModel } from '@/api/setting/model/leaveGroupModel';
   import { deleteGroup, getLeaveGroup } from '@/api/setting/leave';
-  import CreateLeaveGroupModal from './CreateLeaveGroupModal.vue';
+  import LeaveGroupModal from './LeaveGroupModal.vue';
   import ConditionDrawer from './ConditionDrawer.vue';
   import EmployeeModal from './EmployeeModal.vue';
   import { useModal } from '@/components/Modal';
   import { useDrawer } from '@/components/Drawer';
+  import { useMessage } from '@/hooks/web/useMessage';
 
   const { prefixCls } = useDesign('leave-group-card');
 
@@ -80,8 +89,8 @@
     leaveId: number;
   }
 
-  //-註冊CreateLeaveGroupModal(建立群組)
-  const [registerCreateModal, createMethods] = useModal();
+  //-註冊LeaveGroupModal(建立群組)
+  const [registerGroupModal, groupMethods] = useModal();
   //-註冊ConditionDrawer(設定條件)
   const [registerCondDrawer, condMethods] = useDrawer();
   //-註冊EmployeeModal(設定員工)
@@ -114,7 +123,14 @@
    * @description 點擊新增事件
    */
   const handleCreate = () => {
-    createMethods.openModal(true, { isUpdate: false, leaveId: props.leaveId });
+    groupMethods.openModal(true, { isUpdate: false, leaveId: props.leaveId });
+  };
+
+  /**
+   * @description 點擊編輯事件
+   */
+  const handleEdit = (record: LeaveGroupModel) => {
+    groupMethods.openModal(true, { isUpdate: true, leaveId: props.leaveId, record });
   };
 
   /**
@@ -149,6 +165,7 @@
     loading.value = true;
     deleteGroup(record.ID)
       .then(() => {
+        useMessage().createMessage.success({ content: '刪除成功' });
         reload();
       })
       .finally(() => {

@@ -1,23 +1,9 @@
 <template>
   <div>
     <BasicTable @register="registerTable">
-      <template #expandedRowRender="{ record }">
-        <div style="display: flex">
-          <div style="width: 35%">
-            <GroupCard :leaveId="record.ID" />
-          </div>
-          <div style="width: 50%">
-            <AdvancedCard
-              :leave="record"
-              @success="(leave: LeaveModel) => updateTableDataRecord(leave.ID, leave)"
-            />
-          </div>
-        </div>
-      </template>
-
       <template #toolbar>
         <Button type="primary" @click="handleCreate">
-          {{ '新增假別' }}
+          {{ '新增班別' }}
         </Button>
       </template>
 
@@ -28,7 +14,7 @@
               {
                 tooltip: '編輯',
                 icon: 'clarity:note-edit-line',
-                onClick: handleEdit.bind(null, record as LeaveModel),
+                onClick: handleEdit.bind(null, record as WorkShiftModel),
               },
               {
                 tooltip: '刪除',
@@ -37,7 +23,7 @@
                 popConfirm: {
                   title: 'Confirm?',
                   placement: 'left',
-                  confirm: handleDelete.bind(null, record as LeaveModel),
+                  confirm: handleDelete.bind(null, record as WorkShiftModel),
                 },
               },
             ]"
@@ -45,24 +31,22 @@
         </template>
       </template>
     </BasicTable>
-    <LeaveModal @register="registerModal" @success="handleSuccess" />
+    <WorkShiftModal @register="registerModal" @success="handleSuccess" />
   </div>
 </template>
 
 <script lang="ts" setup>
-  import { deleteLeave, getLeaveByKeyword } from '@/api/setting/leave';
+  import { deleteWorkShift, getWorkShiftByKeyword } from '@/api/setting/workShift';
   import { columns, searchFormSchema } from './data';
-  import { LeaveModel } from '@/api/setting/model/leaveModel';
+  import { WorkShiftModel } from '@/api/setting/model/workShiftModel';
   import { useMessage } from '@/hooks/web/useMessage';
   import { useModal } from '@/components/Modal';
   import { useTable, BasicTable, TableAction } from '@/components/Table';
-  import { GroupCard } from './components/GroupCard';
-  import { AdvancedCard } from './components/AdvancedCard';
-  import LeaveModal from './LeaveModal.vue';
+  import WorkShiftModal from './WorkShiftModal.vue';
   import { Button } from 'ant-design-vue';
 
   defineOptions({
-    name: 'LeaveSetting',
+    name: 'WorkShiftSetting',
     inheritAttrs: false,
   });
 
@@ -70,9 +54,9 @@
   const [registerModal, { openModal }] = useModal();
 
   //-table設定
-  const [registerTable, { reload, setLoading, updateTableDataRecord }] = useTable({
+  const [registerTable, { reload, setLoading }] = useTable({
     title: '假別列表',
-    api: getLeaveByKeyword,
+    api: getWorkShiftByKeyword,
     rowKey: 'ID',
     columns,
     formConfig: {
@@ -100,9 +84,9 @@
 
   /**
    * @description 編輯按鈕事件
-   * @param record: LeaveModel
+   * @param record: WorkShiftModel
    */
-  const handleEdit = (record: LeaveModel) => {
+  const handleEdit = (record: WorkShiftModel) => {
     openModal(true, {
       record,
       isUpdate: true,
@@ -111,11 +95,11 @@
 
   /**
    * @description 刪除按鈕事件
-   * @param record: LeaveModel
+   * @param record: WorkShiftModel
    */
-  const handleDelete = (record: LeaveModel) => {
+  const handleDelete = (record: WorkShiftModel) => {
     setLoading(true);
-    deleteLeave(record.ID)
+    deleteWorkShift(record.ID)
       .then(() => {
         useMessage().createMessage.success({ content: '刪除成功' });
         reload();

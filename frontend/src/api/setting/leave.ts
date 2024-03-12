@@ -134,3 +134,17 @@ export function setLeaveGroupCond(
     { errorMessageMode: mode },
   );
 }
+
+/**
+ * @description 設置群組的名稱
+ * @param id group id
+ * @param name group name
+ * @param mode error mode
+ * @returns Promise
+ */
+export function setLeaveName(id: number, name: string, mode: ErrorMessageMode = 'message') {
+  return defHttp.patch(
+    { url: `/v1/leave/group/${id}/name`, params: { name } },
+    { errorMessageMode: mode },
+  );
+}

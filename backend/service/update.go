@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"fmt"
+	gberror "ghostbb.io/gb/errors/gb_error"
 	"ghostbb.io/gb/frame/g"
 	gbctx "ghostbb.io/gb/os/gb_ctx"
 	"github.com/wailsapp/wails/v2/pkg/runtime"
@@ -11,6 +12,7 @@ import (
 	selfupdate "hrms/backend/utils/go-update"
 	"hrms/backend/utils/progress"
 	"io"
+	"net"
 	"sync"
 )
 
@@ -108,7 +110,7 @@ func (u *updateService) DoUpdate() (resp types.JSResp) {
 	u.bytes = append(u.bytes, newBytes...)
 	if err != nil {
 		// http2: response body closed
-		if err.Error() == "http2: response body closed" {
+		if gberror.Is(err, net.ErrClosed) {
 			resp.Success = true
 			resp.Msg = "update stop"
 			return

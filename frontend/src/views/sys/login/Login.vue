@@ -37,7 +37,30 @@
             class="relative w-full px-5 py-8 mx-auto my-auto rounded-md shadow-md xl:ml-16 xl:bg-transparent sm:px-8 xl:p-4 xl:shadow-none sm:w-3/4 lg:w-2/4 xl:w-auto enter-x"
           >
             <LoginForm />
+            <UpdateApp :new-version="latestVersion" :old-version="version" />
           </div>
+        </div>
+      </div>
+    </div>
+
+    <!--寫入版本號-->
+    <div style="text-align: right">
+      <div class="enter-x" style="position: fixed; right: 10px; bottom: 10px; width: 100%">
+        <div v-if="version && latestVersion">
+          <WarningFilled
+            v-if="version !== latestVersion"
+            class="mr-1 modal-icon-warning"
+            style="font-size: 12px"
+          />
+          <span
+            :style="version !== latestVersion ? { cursor: 'pointer' } : {}"
+            style="font-size: 14px"
+            @click="handleVersion"
+            >{{ version }}</span
+          >
+        </div>
+        <div v-else>
+          <span style="font-size: 14px">Getting version...</span>
         </div>
       </div>
     </div>
@@ -49,8 +72,12 @@
   import { useDesign } from '@/hooks/web/useDesign';
   import { useI18n } from '@/hooks/web/useI18n';
   import { useLocaleStore } from '@/store/modules/locale';
-  import { computed } from 'vue';
+  import { computed, ref, onMounted } from 'vue';
   import LoginForm from './LoginForm.vue';
+  import { Info, Latest } from '@/wailsjs/go/service/systemService';
+  import UpdateApp from './UpdateApp.vue';
+  import { LoginStateEnum, useLoginState } from './useLogin';
+  import { WarningFilled } from '@ant-design/icons-vue';
 
   defineProps({
     sessionTimeout: {
@@ -64,6 +91,34 @@
   const localeStore = useLocaleStore();
   const showLocale = localeStore.getShowPicker;
   const title = computed(() => globSetting?.title ?? '');
+  const version = ref<string>();
+  const latestVersion = ref<string>();
+  const { setLoginState } = useLoginState();
+
+  const handleVersion = () => {
+    if (version.value !== latestVersion.value) {
+      setLoginState(LoginStateEnum.UPDATE_APP);
+    }
+  };
+
+  const getLatestVersion = async () => {
+    const res = await Latest();
+    if (res.data) {
+      latestVersion.value = res.data['tag_name'];
+    }
+  };
+
+  const getAppVersion = async () => {
+    const res = await Info();
+    if (res.data) {
+      version.value = res.data['version'];
+    }
+  };
+
+  onMounted(() => {
+    getLatestVersion();
+    getAppVersion();
+  });
 </script>
 <style lang="less">
   @prefix-cls: ~'@{namespace}-login';
@@ -105,7 +160,7 @@
   .@{prefix-cls} {
     min-height: 100%;
     overflow: hidden;
-    background-color: #fff;
+    // background-color: #fff;
 
     /* stylelint-disable-next-line media-query-no-invalid */
     @media (max-width: @screen-xl) {

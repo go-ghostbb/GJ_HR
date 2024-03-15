@@ -14,10 +14,10 @@
     !define INFO_PRODUCTNAME "HRMS"
 !endif
 !ifndef INFO_PRODUCTVERSION
-    !define INFO_PRODUCTVERSION "1.1.2"
+    !define INFO_PRODUCTVERSION "0.0.2"
 !endif
 !ifndef INFO_COPYRIGHT
-    !define INFO_COPYRIGHT "Ghostbb"
+    !define INFO_COPYRIGHT "GIAJIU"
 !endif
 !ifndef PRODUCT_EXECUTABLE
     !define PRODUCT_EXECUTABLE "${INFO_PROJECTNAME}.exe"

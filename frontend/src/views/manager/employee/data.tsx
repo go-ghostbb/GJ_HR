@@ -2,8 +2,6 @@ import { EmploymentStatus } from '@/api/manager/model/employeeModel';
 import { BasicColumn, FormSchema } from '@/components/Table';
 import dayjs from 'dayjs';
 import { Tag, Avatar } from 'ant-design-vue';
-import { getDepartmentByKeyword } from '@/api/manager/department';
-import { TreeItem } from '@/components/Tree';
 
 const avatarPrefixURL = `${import.meta.env.VITE_GLOB_API_URL}/assets/employee`;
 
@@ -109,7 +107,6 @@ export const formSchema: FormSchema[] = [
     label: '部門',
     component: 'TreeSelect',
     componentProps: {
-      treeData: await getDeptTree(),
       fieldNames: {
         label: 'name',
         value: 'ID',
@@ -168,11 +165,3 @@ export const formSchema: FormSchema[] = [
     required: true,
   },
 ];
-
-async function getDeptTree(): Promise<TreeItem[]> {
-  const result = await getDepartmentByKeyword();
-  if (result) {
-    result.unshift({ name: '無', ID: 0 });
-  }
-  return result as unknown as TreeItem[];
-}

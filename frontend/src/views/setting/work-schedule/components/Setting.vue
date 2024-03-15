@@ -83,6 +83,9 @@
 
           <Col>
             <!-- 非設定模式下 -->
+            <Button v-if="!isSetting" class="mr-1 mt-1" size="small" @click="clickCopy()">
+              {{ '複製' }}
+            </Button>
             <Button v-if="!isSetting" class="mr-1 mt-1" size="small" @click="clickSetting(current)">
               {{ '設定' }}
             </Button>
@@ -115,6 +118,8 @@
         </ul>
       </template>
     </Calendar>
+
+    <CopyModal @register="registerCopyModal" />
   </div>
 </template>
 
@@ -133,10 +138,14 @@
   import { CalendarMode } from 'ant-design-vue/es/calendar/generateCalendar';
   import { cloneDeep } from 'lodash-es';
   import { useMessage } from '@/hooks/web/useMessage';
+  import CopyModal from './CopyModal.vue';
+  import { useModal } from '@/components/Modal';
 
   const { prefixCls } = useDesign('work-schedule-setting-modal');
 
   const emit = defineEmits(['setting']);
+
+  const [registerCopyModal, copyMethod] = useModal();
 
   //-loading
   const loading = ref(false);
@@ -222,7 +231,7 @@
     let existIndex = 0;
     const temp = cloneDeep(scheduleData.value);
     const thisDay: WorkScheduleModel[] = [];
-    let totalHours = 0;
+    // let totalHours = 0;
     //-判斷date裡是否已存在以選擇的work shift
     temp.forEach((schedule, index) => {
       const scheduleDay = dayjs(schedule.scheduleDate);
@@ -238,7 +247,7 @@
           return;
         }
         thisDay.push(schedule);
-        totalHours += schedule.workShift.totalHours!;
+        // totalHours += schedule.workShift.totalHours!;
       }
     });
 
@@ -254,10 +263,10 @@
         return;
       }
       // 判斷是否超過8小時
-      if (totalHours + workShiftSelect.value!.totalHours! > 8) {
-        useMessage().createMessage.error({ content: '超過8小時' });
-        return;
-      }
+      // if (totalHours + workShiftSelect.value!.totalHours! > 8) {
+      //   useMessage().createMessage.error({ content: '超過8小時' });
+      //   return;
+      // }
       temp.push({
         ID: 0,
         scheduleDate: date.toDate(),
@@ -307,6 +316,13 @@
     setSetting(false);
     //-資料恢復
     scheduleData.value = cloneDeep(cacheScheduleData.value);
+  };
+
+  /**
+   * @description 點擊複製
+   */
+  const clickCopy = () => {
+    copyMethod.openModal(true, { schedules: scheduleData.value, employeeId: employeeId.value });
   };
 
   /**

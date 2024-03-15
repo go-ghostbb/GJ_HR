@@ -18,14 +18,18 @@
   import { formSchema } from './data';
   import { EmployeeModel } from '@/api/manager/model/employeeModel';
   import { createEmployee, updateEmployee } from '@/api/manager/employee';
+  import { TreeItem } from '@/components/Tree';
+  import { getDepartmentByKeyword } from '@/api/manager/department';
 
   const emit = defineEmits(['register', 'success']);
 
   const isUpdate = ref(true); //-新增視窗或編輯視窗
   const record = ref<EmployeeModel>(); //-傳入的table參數
 
+  const dpetTreeOnce = ref(false); //-只執行一次
+
   //-form設定
-  const [registerForm, { resetFields, setFieldsValue, validate }] = useForm({
+  const [registerForm, { resetFields, setFieldsValue, validate, updateSchema }] = useForm({
     labelWidth: 100,
     schemas: formSchema,
     showActionButtonGroup: false,
@@ -33,7 +37,7 @@
   });
 
   //-drawer入口
-  const [registerDrawer, { setDrawerProps, closeDrawer }] = useDrawerInner((data) => {
+  const [registerDrawer, { setDrawerProps, closeDrawer }] = useDrawerInner(async (data) => {
     resetFields();
     setDrawerProps({ confirmLoading: false });
     isUpdate.value = !!data?.isUpdate;
@@ -44,6 +48,16 @@
       setFieldsValue({ ...record.value });
     } else {
       record.value = { ID: 0 };
+    }
+
+    if (!dpetTreeOnce.value) {
+      const deptTree = await getDeptTree();
+      updateSchema({
+        field: 'departmentId',
+        componentProps: {
+          treeData: deptTree,
+        },
+      });
     }
   });
 
@@ -97,5 +111,16 @@
     } else {
       return values as EmployeeModel;
     }
+  };
+
+  /**
+   * @description 獲取部門tree
+   */
+  const getDeptTree = async (): Promise<TreeItem[]> => {
+    const result = await getDepartmentByKeyword();
+    if (result) {
+      result.unshift({ name: '無', ID: 0 });
+    }
+    return result as unknown as TreeItem[];
   };
 </script>

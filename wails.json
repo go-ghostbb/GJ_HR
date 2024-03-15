@@ -8,12 +8,12 @@
   "frontend:dev:serverUrl": "http://localhost:5173/",
   "wailsjsdir": "frontend/src",
   "author": {
-    "name": "Ghostbb-io",
-    "email": "mucgll0328@ghostbb.net"
+    "name": "GIAJIU",
+    "email": "project@mail.gj.com.tw"
   },
   "info": {
     "productName": "HRMS",
-    "productVersion": "1.1.2",
+    "productVersion": "0.0.1",
     "copyright": "Ghostbb",
     "comments": "Human Resources Management System"
   }

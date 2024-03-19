@@ -12,6 +12,7 @@ export enum EmploymentStatus {
  * @description Employee interface result
  */
 export interface EmployeeModel extends BasicDatabaseModel {
+  code?: string;
   hireDate?: Date;
   terminationDate?: Date;
   employmentStatus?: string;

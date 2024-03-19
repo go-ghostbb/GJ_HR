@@ -1,19 +1,11 @@
-# README
+# 人事系統API
 
-## About
+## 提交規範
 
-This is the official Wails Vue-TS template.
-
-You can configure the project by editing `wails.json`. More information about the project settings can be found
-here: https://wails.io/docs/reference/project-config
-
-## Live Development
-
-To run in live development mode, run `wails dev` in the project directory. This will run a Vite development
-server that will provide very fast hot reload of your frontend changes. If you want to develop in a browser
-and have access to your Go methods, there is also a dev server that runs on http://localhost:34115. Connect
-to this in your browser, and you can call your Go code from devtools.
-
-## Building
-
-To build a redistributable, production mode package, use `wails build`.
+- **feat**：新增新功能
+- **fix**：修復問題或錯誤
+- **docs**：更新文檔
+- **style**：調整代碼風格，例如空格、括號等
+- **refactor**：重構代碼，但不是為了修復錯誤或新增功能
+- **test**：新增或修改測試
+- **chore**：更新代碼的構建或工具配置，例如更新依賴項、修改設置文件等

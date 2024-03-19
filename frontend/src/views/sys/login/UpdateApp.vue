@@ -127,17 +127,17 @@
 
       const resp = await DoUpdate();
       if (!resp.success) {
-        if (!(resp.msg === 'http2: response body closed')) {
-          createErrorModal({
-            title: 'Update failed',
-            content: 'error message:' + resp.msg,
-            onOk: () => {
-              start.value = false;
-            },
-          });
-        }
+        createErrorModal({
+          title: 'Update failed',
+          content: 'error message:' + resp.msg,
+          onOk: () => {
+            start.value = false;
+          },
+        });
       } else {
-        done.value = true;
+        if (!(resp.msg === 'update stop')) {
+          done.value = true;
+        }
       }
     } else {
       createMessage.error({ content: 'Unable to update' });

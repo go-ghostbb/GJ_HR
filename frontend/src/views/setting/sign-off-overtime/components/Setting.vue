@@ -27,11 +27,11 @@
                 <!-- 天數 -->
                 <FormItem
                   class="ml-1"
-                  label="觸發天數"
-                  :name="`gteDay_${index}`"
-                  :rules="formRules.gteDay"
+                  label="觸發時數"
+                  :name="`gteHour_${index}`"
+                  :rules="formRules.gteHour"
                 >
-                  <Input v-model:value="item.gteDay" />
+                  <Input v-model:value="item.gteHour" />
                 </FormItem>
 
                 <!-- notify -->
@@ -113,10 +113,10 @@
 
 <script lang="ts" setup>
   import {
-    LeaveSignOffSettingModel,
+    OvertimeSignOffSettingModel,
     SignType,
     SignNotify,
-  } from '@/api/setting/model/leaveSignOffSettingModel';
+  } from '@/api/setting/model/overtimeSignOffSettingModel';
   import { useDesign } from '@/hooks/web/useDesign';
   import { PlusCircleOutlined, CloseOutlined } from '@ant-design/icons-vue';
   import {
@@ -133,21 +133,21 @@
   import { reactive, ref, Ref, watch } from 'vue';
   import EmployeePicker from './EmployeePicker/EmployeePicker.vue';
   import {
-    getLeaveSignOffSetting,
-    updateLeaveSignOffSettingBatch,
+    getOvertimeSignOffSetting,
+    updateOvertimeSignOffSettingBatch,
   } from '@/api/setting/signOffsetting';
   import { useMessage } from '@/hooks/web/useMessage';
   import type { Rule } from 'ant-design-vue/es/form';
 
-  const { prefixCls } = useDesign('leave-sign-off-setting');
+  const { prefixCls } = useDesign('vacation-sign-off-setting');
 
   export interface Props {
-    leaveId: number;
+    vacationId?: number;
     departmentId: number;
   }
 
   interface form {
-    setting: (LeaveSignOffSettingModel & {
+    setting: (OvertimeSignOffSettingModel & {
       employeePickerRef: Ref<any>;
       once: boolean;
     })[];
@@ -158,7 +158,6 @@
 
   //-父組件傳進來的參數
   const props = withDefaults(defineProps<Props>(), {
-    leaveId: 0,
     departmentId: 0,
   });
 
@@ -175,7 +174,7 @@
   const handleAdd = () => {
     formState.setting.push({
       ID: 0,
-      leaveId: props.leaveId,
+      vacationId: props.vacationId,
       departmentId: props.departmentId,
       level: formState.setting.length + 1,
       employeePickerRef: ref(),
@@ -202,9 +201,9 @@
     try {
       loading.value = true;
 
-      if (props.departmentId !== 0 && props.leaveId !== 0) {
-        const setting = await getLeaveSignOffSetting({
-          leaveId: props.leaveId,
+      if (props.departmentId !== 0) {
+        const setting = await getOvertimeSignOffSetting({
+          vacationId: props.vacationId!,
           departmentId: props.departmentId,
         });
 
@@ -254,7 +253,7 @@
   const handleSave = () => {
     formRef.value?.validate().then(() => {
       loading.value = true;
-      updateLeaveSignOffSettingBatch(props.departmentId, props.leaveId, formState.setting)
+      updateOvertimeSignOffSettingBatch(props.departmentId, props.vacationId!, formState.setting)
         .then(() => {
           useMessage().createMessage.success({ content: '設定成功' });
         })
@@ -268,13 +267,13 @@
    * @description form rule map
    */
   const formRules = {
-    gteDay: [
+    gteHour: [
       {
         validator: (rule: Rule) => {
           //-格式為"欄位＿index"
           const sp = (rule as any).field.split('_');
           const value = formState.setting[Number(sp[1])][sp[0]];
-          const message = '請輸入觸發天數';
+          const message = '請輸入觸發時數';
 
           // 不能為空
           if (!value && value !== 0) {
@@ -347,7 +346,7 @@
   };
 
   watch(
-    () => props.leaveId,
+    () => props.vacationId,
     (_v) => {
       fetch();
     },
@@ -355,7 +354,7 @@
 </script>
 
 <style scoped lang="less">
-  @prefix-cls: ~'@{namespace}-leave-sign-off-setting';
+  @prefix-cls: ~'@{namespace}-vacation-sign-off-setting';
 
   .@{prefix-cls} {
     width: auto;

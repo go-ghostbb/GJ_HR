@@ -10,7 +10,7 @@ import { LeaveGroupConditionModel } from './model/leaveGroupConditionModel';
  * @param params 查詢參數
  */
 export function getLeaveByKeyword(
-  params: GetLeaveByKeywordParams,
+  params?: GetLeaveByKeywordParams,
   mode: ErrorMessageMode = 'message',
 ) {
   return defHttp.get<BasicFetchResult<LeaveModel>>(

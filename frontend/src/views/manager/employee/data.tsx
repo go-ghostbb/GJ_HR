@@ -1,4 +1,4 @@
-import { EmploymentStatus } from '@/api/manager/model/employeeModel';
+import { EmploymentStatus, SalaryCycle } from '@/api/manager/model/employeeModel';
 import { BasicColumn, FormSchema } from '@/components/Table';
 import dayjs from 'dayjs';
 import { Tag, Avatar } from 'ant-design-vue';
@@ -94,40 +94,9 @@ export const searchFormSchema: FormSchema[] = [
   },
 ];
 
-export const formSchema: FormSchema[] = [
+const basicInfoFormSchema: FormSchema[] = [
   {
-    field: 'realName',
-    label: '姓名',
-    component: 'Input',
-    required: true,
-  },
-  {
-    field: 'departmentId',
-    defaultValue: 0,
-    label: '部門',
-    component: 'TreeSelect',
-    componentProps: {
-      fieldNames: {
-        label: 'name',
-        value: 'ID',
-      },
-      getPopupContainer: () => document.body,
-    },
-    required: true,
-  },
-  {
-    field: 'hireDate',
-    label: '到職日期',
-    component: 'DatePicker',
-    defaultValue: dayjs(new Date()),
-    componentProps: {
-      valueFormat: 'YYYY-MM-DD',
-      allowClear: false,
-    },
-    required: true,
-  },
-  {
-    field: '',
+    field: 'basicInfoDivider',
     label: '基本資料',
     component: 'Divider',
     colProps: { lg: 24 },
@@ -164,4 +133,96 @@ export const formSchema: FormSchema[] = [
     component: 'Input',
     required: true,
   },
+];
+
+const salayFormSchema: FormSchema[] = [
+  {
+    field: 'salaryDivider',
+    label: '薪資設定',
+    component: 'Divider',
+    colProps: { lg: 24 },
+    componentProps: {
+      style: { 'font-weight': 'bold', 'font-size': '18px' },
+      orientation: 'center',
+    },
+  },
+  {
+    field: 'salary',
+    label: '薪資金額',
+    component: 'Input',
+    required: true,
+    rules: [
+      {
+        validator: (rule, val) => {
+          if (val.toString().indexOf('.') === -1 && val.toString().substr(-1) === '.') {
+            return Promise.resolve();
+          }
+
+          // convert to number
+          const reg = /^(\d{0,10})(\.\d{1,4})?$/;
+          if (!reg.test(val)) {
+            return Promise.reject('格式不對');
+          } else {
+            val = Number(val);
+          }
+
+          return Promise.resolve();
+        },
+      },
+    ],
+  },
+  {
+    field: 'salaryCycle',
+    label: '計薪週期',
+    component: 'Select',
+    required: true,
+    componentProps: {
+      options: [
+        {
+          label: '月薪制',
+          value: SalaryCycle.Month,
+        },
+        {
+          label: '時薪制',
+          value: SalaryCycle.Hour,
+        },
+      ],
+    },
+  },
+];
+
+export const formSchema: FormSchema[] = [
+  {
+    field: 'realName',
+    label: '姓名',
+    component: 'Input',
+    required: true,
+  },
+  {
+    field: 'departmentId',
+    defaultValue: 0,
+    label: '部門',
+    component: 'TreeSelect',
+    componentProps: {
+      fieldNames: {
+        label: 'name',
+        value: 'ID',
+      },
+      getPopupContainer: () => document.body,
+    },
+    required: true,
+  },
+  {
+    field: 'hireDate',
+    label: '到職日期',
+    component: 'DatePicker',
+    defaultValue: dayjs(new Date()),
+    componentProps: {
+      valueFormat: 'YYYY-MM-DD',
+      allowClear: false,
+    },
+    required: true,
+  },
+  ...basicInfoFormSchema,
+  ...salayFormSchema,
 ];

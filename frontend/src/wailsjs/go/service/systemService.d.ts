@@ -7,4 +7,8 @@ export function Info():Promise<types.JSResp>;
 
 export function Latest():Promise<types.JSResp>;
 
+export function SetApiUrl(arg1:string):Promise<void>;
+
+export function SetToken(arg1:string):Promise<void>;
+
 export function Start(arg1:context.Context,arg2:string):Promise<void>;

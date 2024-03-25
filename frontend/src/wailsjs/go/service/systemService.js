@@ -10,6 +10,14 @@ export function Latest() {
   return window['go']['service']['systemService']['Latest']();
 }
 
+export function SetApiUrl(arg1) {
+  return window['go']['service']['systemService']['SetApiUrl'](arg1);
+}
+
+export function SetToken(arg1) {
+  return window['go']['service']['systemService']['SetToken'](arg1);
+}
+
 export function Start(arg1, arg2) {
   return window['go']['service']['systemService']['Start'](arg1, arg2);
 }

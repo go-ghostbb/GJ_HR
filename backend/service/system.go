@@ -2,10 +2,12 @@ package service
 
 import (
 	"context"
+	"fmt"
 	gbvar "ghostbb.io/gb/container/gb_var"
 	"ghostbb.io/gb/frame/g"
 	gbctx "ghostbb.io/gb/os/gb_ctx"
 	gbstr "ghostbb.io/gb/text/gb_str"
+	"hrms/backend/global"
 	"hrms/backend/types"
 	"runtime"
 	"sync"
@@ -81,4 +83,16 @@ func (s *systemService) Latest() (resp types.JSResp) {
 	resp.Success = true
 	resp.Data = repository
 	return
+}
+
+// SetToken 設置token
+func (s *systemService) SetToken(token string) {
+	global.Token = token
+	fmt.Println("set token:", token)
+}
+
+// SetApiUrl 設置url
+func (s *systemService) SetApiUrl(url string) {
+	global.APIUrl = url
+	fmt.Println("set url:", url)
 }

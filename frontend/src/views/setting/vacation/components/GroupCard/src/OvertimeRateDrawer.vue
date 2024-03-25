@@ -8,7 +8,7 @@
     @ok="handleOk"
   >
     <div :class="prefixCls">
-      <Form ref="formRef" :model="fromData" layout="vertical">
+      <Form ref="formRef" :model="formData" layout="vertical">
         <!-- 年資設定 -->
         <template v-for="(item, index) in formState.rate" :key="`rate-${index}`">
           <div style="display: flex; flex-direction: row; width: 100%">
@@ -116,7 +116,7 @@
   }
 
   //-form裡面的資料
-  const fromData = reactive({}); // 給form暫存資料用
+  const formData = reactive({}); // 給form暫存資料用
   const formState = reactive<form>({ rate: [] });
   //-form hours輸入框規則
   const formHoursRules: Rule[] = [

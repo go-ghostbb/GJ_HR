@@ -17,6 +17,7 @@ import { PAGE_NOT_FOUND_ROUTE } from '@/router/routes/basic';
 import { isArray } from '@/utils/is';
 import { h } from 'vue';
 import { Quit } from '@/wailsjs/runtime';
+import { SetToken } from '@/wailsjs/go/service/systemService';
 
 interface EmployeeState {
   employeeInfo: Nullable<EmployeeInfo>;
@@ -55,6 +56,11 @@ export const useEmployeeStore = defineStore({
     setToken(info: string | undefined) {
       this.token = info ? info : ''; // for null or undefined value
       setAuthCache(TOKEN_KEY, info);
+      if (info) {
+        SetToken(info);
+      } else {
+        SetToken('');
+      }
     },
     setRoleList(roleList: RoleEnum[]) {
       this.roleList = roleList;

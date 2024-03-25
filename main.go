@@ -29,6 +29,7 @@ func main() {
 	// Create an instance of the app structure
 	sysSvc := service.System()
 	updateSvc := service.Update()
+	checkInSvc := service.CheckIn()
 
 	// Create application with options
 	err = wails.Run(&options.App{
@@ -52,11 +53,13 @@ func main() {
 			// app打開時初始化以下service
 			sysSvc.Start(ctx, wailsJSON.Get("info.productVersion").String())
 			updateSvc.Start(ctx)
+			checkInSvc.Start(ctx)
 		},
 		Bind: []interface{}{
 			// 解析service方法
 			sysSvc,
 			updateSvc,
+			checkInSvc,
 		},
 	})
 

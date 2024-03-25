@@ -8,6 +8,11 @@ export enum EmploymentStatus {
   Resigned = 'resigned',
 }
 
+export enum SalaryCycle {
+  Month = 'month',
+  Hour = 'hour',
+}
+
 /**
  * @description Employee interface result
  */
@@ -27,6 +32,8 @@ export interface EmployeeModel extends BasicDatabaseModel {
   roles?: RoleModel[];
   departmentId?: number;
   department?: DepartmentModel;
+  salary?: number;
+  salaryCycle?: SalaryCycle;
 }
 
 /**

@@ -4,7 +4,7 @@
     @register="registerDrawer"
     showFooter
     :title="getTitle"
-    width="50%"
+    width="35%"
     @ok="handleSubmit"
   >
     <BasicForm @register="registerForm" />
@@ -107,6 +107,8 @@
       result.birth = values.birth;
       result.email = values.email;
       result.mobile = values.mobile;
+      result.salary = Number(values.salary);
+      result.salaryCycle = values.salaryCycle;
       return result;
     } else {
       return values as EmployeeModel;

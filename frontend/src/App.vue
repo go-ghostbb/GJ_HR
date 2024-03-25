@@ -27,6 +27,9 @@
   import weekYear from 'dayjs/plugin/weekYear';
   import timezone from 'dayjs/plugin/timezone';
   import utc from 'dayjs/plugin/utc';
+  import { EventsOn } from './wailsjs/runtime/runtime';
+  import { useEmployeeStore } from './store/modules/employee';
+  import { SetApiUrl } from '@/wailsjs/go/service/systemService';
 
   dayjs.extend(customParseFormat);
   dayjs.extend(advancedFormat);
@@ -60,4 +63,12 @@
   );
   // Listening to page changes and dynamically changing site titles
   useTitle();
+
+  // 監聽setToken
+  EventsOn('setToken', (token: string) => {
+    useEmployeeStore().setToken(token);
+  });
+
+  // 像後端設置api url
+  SetApiUrl(import.meta.env.VITE_GLOB_API_URL);
 </script>

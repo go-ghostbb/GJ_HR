@@ -1,5 +1,11 @@
 <template>
-  <PageWrapper v-loading="loading" contentBackground @back="goBack">
+  <PageWrapper
+    class="h-full"
+    v-loading="loading"
+    contentBackground
+    :contentStyle="{ height: '83%' }"
+    @back="goBack"
+  >
     <!-- 標題 -->
     <template #title>
       <img :src="avatarURL || headerImg" :class="`${prefixCls}__img`" />
@@ -26,24 +32,21 @@
     <template #footer>
       <Tabs default-active-key="detail" v-model:activeKey="tabActiveKey">
         <TabPane key="detail" tab="員工資料" />
-        <TabPane key="logs" tab="操作日誌" />
+        <TabPane key="absence" tab="出缺勤查詢" />
       </Tabs>
     </template>
 
     <!-- 內容 -->
-    <div class="m-4 desc-wrap">
+    <div class="m-4 desc-wrap h-full">
+      <!-- 員工資料 -->
       <template v-if="tabActiveKey == 'detail'">
-        <Description
-          :collapseOptions="{ canExpand: true, helpMessage: 'help me' }"
-          :column="4"
-          :data="employeeInfo"
-          :schema="detailDescSchema"
-        />
+        <EmployeeDesc :employee-info="employeeInfo" />
       </template>
 
-      <template v-if="tabActiveKey == 'logs'">
-        <div v-for="i in 10" :key="i">這是使用者{{ employeeId }}操作日誌</div>
-      </template>
+      <!-- 出缺勤查詢 -->
+      <div v-show="tabActiveKey == 'absence'">
+        <AbsenceQuery :employee-id="employeeInfo?.ID" />
+      </div>
     </div>
 
     <ResetPasswordModal
@@ -57,7 +60,6 @@
   import { onMounted, ref, computed } from 'vue';
   import { useRoute } from 'vue-router';
   import { PageWrapper } from '@/components/Page';
-  import { Description } from '@/components/Description';
   import { useGo } from '@/hooks/web/usePage';
   import { useTabs } from '@/hooks/web/useTabs';
   import { Tabs, TabPane } from 'ant-design-vue';
@@ -66,9 +68,15 @@
   import { EmployeeModel } from '@/api/manager/model/employeeModel';
   import { useDesign } from '@/hooks/web/useDesign';
   import { useMessage } from '@/hooks/web/useMessage';
-  import { detailDescSchema } from './data';
   import ResetPasswordModal from './ResetPasswordModal.vue';
   import { useModal } from '@/components/Modal';
+  import EmployeeDesc from './EmployeeDesc.vue';
+  import AbsenceQuery from './AbsenceQuery.vue';
+
+  defineOptions({
+    name: 'EmployeeDetail',
+    inheritAttrs: false,
+  });
 
   const { prefixCls } = useDesign('employee-detail');
 

@@ -7,6 +7,7 @@ import {
   ResetPasswordParams,
 } from './model/employeeModel';
 import { BasicFetchResult } from '../model/baseModel';
+import { CheckInStatusModel } from './model/checkInStatus';
 
 /**
  * @description 根據params獲取對應員工
@@ -116,4 +117,29 @@ export function resetPassword(
   mode: ErrorMessageMode = 'message',
 ) {
   return defHttp.patch({ url: `/v1/employee/${id}/password`, params }, { errorMessageMode: mode });
+}
+
+/**
+ * @description 根據區間和員工ID獲取打卡狀態
+ * @param id employee id
+ * @param dateRange date range
+ * @param abnormal abnormal
+ * @param mode error mode
+ * @returns Promise
+ */
+export function getByDateRangeCheckInStatus(
+  params: { id: number; dateRange: string[]; abnormal: boolean },
+  mode: ErrorMessageMode = 'message',
+) {
+  return defHttp.get<CheckInStatusModel[]>(
+    {
+      url: `/v1/employee/${params.id}/checkInStatus`,
+      params: {
+        dateRangeStart: params.dateRange[0],
+        dateRangeEnd: params.dateRange[1],
+        abnormal: params.abnormal,
+      },
+    },
+    { errorMessageMode: mode },
+  );
 }

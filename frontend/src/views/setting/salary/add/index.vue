@@ -12,6 +12,12 @@
           <TableAction
             :actions="[
               {
+                tooltip: '套用員工',
+                color: 'warning',
+                icon: 'ant-design:user-outlined',
+                onClick: handleSetEmployee.bind(null, record as SalaryAddItemModel),
+              },
+              {
                 tooltip: '編輯',
                 icon: 'clarity:note-edit-line',
                 onClick: handleEdit.bind(null, record as SalaryAddItemModel),
@@ -32,7 +38,8 @@
       </template>
     </BasicTable>
 
-    <SalaryAddModal @register="registerModal" @success="handleSuccess" />
+    <SalaryAddModal @register="registerSalaryAddModal" @success="handleSuccess" />
+    <EmployeeModal @register="registerEmployeeModal" @success="handleSuccess" />
   </div>
 </template>
 
@@ -45,13 +52,19 @@
   import { SalaryAddItemModel } from '@/api/setting/model/salaryAddItemModel';
   import SalaryAddModal from './SalaryAddModal.vue';
   import { useModal } from '@/components/Modal';
+  import EmployeeModal from './EmployeeModal.vue';
+  import { EmployeeModel } from '@/api/manager/model/employeeModel';
 
   defineOptions({
     name: 'SalaryAddSetting',
     inheritAttrs: false,
   });
 
-  const [registerModal, { openModal }] = useModal();
+  //-SalaryAddModal註冊
+  const [registerSalaryAddModal, salaryAddMethod] = useModal();
+
+  //-EmployeeModal註冊
+  const [registerEmployeeModal, employeeMethod] = useModal();
 
   //-table設定
   const [registerTable, { reload, setLoading }] = useTable({
@@ -68,7 +81,7 @@
     bordered: true,
     showIndexColumn: false,
     actionColumn: {
-      width: 80,
+      width: 120,
       title: '操作',
       dataIndex: 'action',
       fixed: undefined,
@@ -79,7 +92,7 @@
    * @description 新增按鈕事件
    */
   const handleCreate = () => {
-    openModal(true, { isUpdate: false });
+    salaryAddMethod.openModal(true, { isUpdate: false });
   };
 
   /**
@@ -87,7 +100,16 @@
    * @param record: SalaryAddItemModel
    */
   const handleEdit = (record: SalaryAddItemModel) => {
-    openModal(true, { isUpdate: true, record, ID: record.ID });
+    salaryAddMethod.openModal(true, { isUpdate: true, record, ID: record.ID });
+  };
+
+  /**
+   * @description 設定套用員工
+   * @param record SalaryAddItemModel
+   */
+  const handleSetEmployee = (record: SalaryAddItemModel) => {
+    console.log(record);
+    employeeMethod.openModal(true, { id: record.ID, employeeIds: getEmpIDs(record.employee) });
   };
 
   /**
@@ -114,5 +136,20 @@
   const handleSuccess = () => {
     reload();
     useMessage().createMessage.success({ content: '操作成功' });
+  };
+
+  /**
+   * @description 獲取員工ID
+   * @param employees
+   */
+  const getEmpIDs = (employees?: EmployeeModel[]): number[] => {
+    if (!employees) {
+      return [];
+    }
+    const result: number[] = [];
+    employees.forEach((e) => {
+      result.push(e.ID);
+    });
+    return result;
   };
 </script>

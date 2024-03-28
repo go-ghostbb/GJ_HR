@@ -4,9 +4,12 @@ import (
 	"context"
 	"embed"
 	gbjson "ghostbb.io/gb/encoding/gb_json"
+	"ghostbb.io/gb/frame/g"
+	gblog "ghostbb.io/gb/os/gb_log"
 	"github.com/wailsapp/wails/v2/pkg/options/assetserver"
 	"github.com/wailsapp/wails/v2/pkg/options/mac"
 	"github.com/wailsapp/wails/v2/pkg/options/windows"
+	"hrms/backend/logger"
 	"hrms/backend/service"
 
 	"github.com/wailsapp/wails/v2"
@@ -26,6 +29,8 @@ func main() {
 		panic(err)
 	}
 
+	g.Log().SetLevel(gblog.LEVEL_PROD | gblog.LEVEL_INFO)
+
 	// Create an instance of the app structure
 	sysSvc := service.System()
 	updateSvc := service.Update()
@@ -40,6 +45,7 @@ func main() {
 		DisableResize:    false,             // 固定大小
 		Frameless:        true,              // 無邊框
 		BackgroundColour: &options.RGBA{R: 255, G: 255, B: 255, A: 1},
+		Logger:           logger.New(),
 		Windows: &windows.Options{
 			DisableWindowIcon: true, // 禁用左上角圖標
 		},

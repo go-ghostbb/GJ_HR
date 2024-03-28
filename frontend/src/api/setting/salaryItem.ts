@@ -62,6 +62,24 @@ export function deleteSalaryAddItem(id: number, mode: ErrorMessageMode = 'messag
 }
 
 /**
+ * @description 設定加項套用員工
+ * @param id 薪資加項 id
+ * @param employeeId employee id
+ * @param mode error mode
+ * @returns Promise
+ */
+export function setSalaryAddItemEmployee(
+  id: number,
+  employeeId: number[],
+  mode: ErrorMessageMode = 'message',
+) {
+  return defHttp.patch(
+    { url: `/v1/salary/add/${id}/employee`, params: { employeeId } },
+    { errorMessageMode: mode },
+  );
+}
+
+/**
  * @description 根據keyword獲取薪資減項
  * @param params 查詢參數
  */
@@ -113,4 +131,22 @@ export function updateSalaryReduceItem(
  */
 export function deleteSalaryReduceItem(id: number, mode: ErrorMessageMode = 'message') {
   return defHttp.delete({ url: `/v1/salary/reduce/${id}` }, { errorMessageMode: mode });
+}
+
+/**
+ * @description 設定減項套用員工
+ * @param id 薪資減項 id
+ * @param employeeId employee id
+ * @param mode error mode
+ * @returns Promise
+ */
+export function setSalaryReduceItemEmployee(
+  id: number,
+  employeeId: number[],
+  mode: ErrorMessageMode = 'message',
+) {
+  return defHttp.patch(
+    { url: `/v1/salary/reduce/${id}/employee`, params: { employeeId } },
+    { errorMessageMode: mode },
+  );
 }

@@ -1,3 +1,4 @@
+import { EmployeeModel } from '@/api/manager/model/employeeModel';
 import { BasicDatabaseModel, BasicPageParams } from '@/api/model/baseModel';
 
 export enum SalaryCalcType {
@@ -28,6 +29,7 @@ export interface SalaryReduceItemModel extends BasicDatabaseModel {
   unit?: SalaryCalcUnit;
   operator?: Operator;
   argument?: number;
+  employee?: EmployeeModel[];
 }
 
 /**

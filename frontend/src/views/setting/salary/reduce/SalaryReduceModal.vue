@@ -64,10 +64,7 @@
                 style="width: 80px"
               >
                 <Select v-model:value="formData.operator">
-                  <SelectOption :key="Operator.Eq"> {{ '=' }} </SelectOption>
-                  <SelectOption :key="Operator.Gt"> {{ '>' }} </SelectOption>
                   <SelectOption :key="Operator.Gte"> {{ '>=' }} </SelectOption>
-                  <SelectOption :key="Operator.Lt"> {{ '<' }} </SelectOption>
                   <SelectOption :key="Operator.Lte"> {{ '<=' }} </SelectOption>
                 </Select>
               </FormItem>

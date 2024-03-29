@@ -179,9 +179,9 @@ export const absenceColumn: BasicColumn[] = [
             case CheckInProcStatus.ProcNormal:
               return '正常';
             case CheckInProcStatus.NotProcessed:
-              return '未處理';
+              return <span style={{ color: 'red' }}>未處理</span>;
             case CheckInProcStatus.Processed:
-              return '已處理';
+              return <span style={{ color: 'blue' }}>已處理</span>;
           }
         },
       },
@@ -225,9 +225,9 @@ export const absenceColumn: BasicColumn[] = [
             case CheckInProcStatus.ProcNormal:
               return '正常';
             case CheckInProcStatus.NotProcessed:
-              return '未處理';
+              return <span style={{ color: 'red' }}>未處理</span>;
             case CheckInProcStatus.Processed:
-              return '已處理';
+              return <span style={{ color: 'blue' }}>已處理</span>;
           }
         },
       },

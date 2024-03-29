@@ -95,11 +95,12 @@ export function getWorkScheduleByDate(
  */
 export function updateWorkScheduleBatch(
   employeeId: number,
+  yearMonth: string,
   schedules: WorkScheduleModel[],
   mode: ErrorMessageMode = 'message',
 ) {
   return defHttp.put(
-    { url: `/v1/workShift/schedule/${employeeId}/batch`, params: { schedules } },
+    { url: `/v1/workShift/schedule/${employeeId}/batch`, params: { schedules, yearMonth } },
     { errorMessageMode: mode },
   );
 }

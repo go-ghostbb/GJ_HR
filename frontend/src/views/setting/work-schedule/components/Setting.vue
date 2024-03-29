@@ -301,7 +301,11 @@
   const handleSave = async () => {
     try {
       loading.value = true;
-      await updateWorkScheduleBatch(employeeId.value, scheduleData.value);
+      await updateWorkScheduleBatch(
+        employeeId.value,
+        calenderValue.value.format('YYYY-MM'),
+        scheduleData.value,
+      );
       useMessage().createMessage.success({ content: '儲存成功' });
     } finally {
       setSetting(false);

@@ -38,9 +38,7 @@ func main() {
 
 	// Create application with options
 	err = wails.Run(&options.App{
-		Title: "hr",
-		//Width:            1024,
-		//Height:           768,
+		Title:            "hr",
 		WindowStartState: options.Maximised, // 最大化視窗
 		DisableResize:    false,             // 固定大小
 		Frameless:        true,              // 無邊框

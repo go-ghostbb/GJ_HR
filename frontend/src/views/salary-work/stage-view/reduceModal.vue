@@ -17,7 +17,7 @@
           v-model:value="item.salaryReduceItemId"
           class="w-150px"
           :options="reduceItemOptions"
-          @change="(e) => handleAddChange(e as number, index)"
+          @change="(e) => handleReduceChange(e as number, index)"
         />
 
         <!-- 金額 -->
@@ -33,7 +33,7 @@
       </div>
     </div>
     <!-- 新增減項 -->
-    <Button type="link" style="font-size: 14px" @click="handleAdd">
+    <Button type="link" style="font-size: 14px" @click="handleReduce">
       <template #icon>
         <PlusCircleOutlined />
       </template>
@@ -48,10 +48,10 @@
   import { ref, onMounted, reactive } from 'vue';
   import type { SelectProps } from 'ant-design-vue';
   import { Select, Input, Button } from 'ant-design-vue';
-  import { getSalaryAddItemByKeyword } from '@/api/setting/salaryItem';
+  import { getSalaryReduceItemByKeyword } from '@/api/setting/salaryItem';
   import { CalcSalaryReduceModel } from '@/api/salary-work/model/salary-work';
   import { PlusCircleOutlined, CloseOutlined } from '@ant-design/icons-vue';
-  import { SalaryAddItemModel } from '@/api/setting/model/salaryAddItemModel';
+  import { SalaryReduceItemModel } from '@/api/setting/model/salaryReduceItemModel';
   import { cloneDeep } from 'lodash-es';
 
   const emit = defineEmits(['success', 'register']);
@@ -61,7 +61,7 @@
   //-減項下拉式選單options
   const reduceItemOptions = ref<SelectProps['options']>([]);
   //-map對照表
-  const reduceItemMap = ref<Map<number, SalaryAddItemModel>>(new Map());
+  const reduceItemMap = ref<Map<number, SalaryReduceItemModel>>(new Map());
 
   //-reduce item
   const calcReduceItem = reactive<CalcSalaryReduceModel[]>([]);
@@ -101,13 +101,13 @@
   /**
    * @description 獲取減項下拉式選單
    */
-  const getAddItemOptions = async () => {
+  const getReduceItemOptions = async () => {
     try {
       changeLoading(true);
-      const reduceItems = await getSalaryAddItemByKeyword();
+      const reduceItems = await getSalaryReduceItemByKeyword();
 
       const options: SelectProps['options'] = [];
-      const reduceMap: Map<number, SalaryAddItemModel> = new Map();
+      const reduceMap: Map<number, SalaryReduceItemModel> = new Map();
       reduceItems.items.forEach((item) => {
         options.push({ value: item.ID, label: item.name });
         reduceMap.set(item.ID, item);
@@ -122,7 +122,7 @@
   /**
    * @description 新增減項
    */
-  const handleAdd = () => {
+  const handleReduce = () => {
     calcReduceItem.push({ ID: 0, calcSalaryEmployeeId: calcEmployeeId.value });
   };
 
@@ -138,12 +138,12 @@
    * @description 減項選擇改變時
    * @param e
    */
-  const handleAddChange = (id: number, index: number) => {
-    const selectAdd = reduceItemMap.value.get(id!)!;
-    calcReduceItem[index].incomeTax = selectAdd.incomeTax;
+  const handleReduceChange = (id: number, index: number) => {
+    const selectReduce = reduceItemMap.value.get(id!)!;
+    calcReduceItem[index].incomeTax = selectReduce.incomeTax;
   };
 
   onMounted(() => {
-    getAddItemOptions();
+    getReduceItemOptions();
   });
 </script>

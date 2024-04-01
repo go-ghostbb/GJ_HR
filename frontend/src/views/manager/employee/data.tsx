@@ -223,6 +223,11 @@ export const formSchema: FormSchema[] = [
     },
     required: true,
   },
+  {
+    field: 'cardNumber',
+    label: '卡機卡號',
+    component: 'Input',
+  },
   ...basicInfoFormSchema,
   ...salayFormSchema,
 ];

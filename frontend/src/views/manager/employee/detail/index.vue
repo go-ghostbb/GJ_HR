@@ -33,6 +33,7 @@
       <Tabs default-active-key="detail" v-model:activeKey="tabActiveKey">
         <TabPane key="detail" tab="員工資料" />
         <TabPane key="absence" tab="出缺勤查詢" />
+        <TabPane key="salaryItem" tab="加項設定" />
       </Tabs>
     </template>
 
@@ -46,6 +47,11 @@
       <!-- 出缺勤查詢 -->
       <div v-show="tabActiveKey == 'absence'">
         <AbsenceQuery :employee-id="employeeInfo?.ID" />
+      </div>
+
+      <!-- 加項設定 -->
+      <div v-show="tabActiveKey == 'salaryItem'">
+        <AddItemSetting :employee-id="employeeInfo?.ID" />
       </div>
     </div>
 
@@ -68,10 +74,11 @@
   import { EmployeeModel } from '@/api/manager/model/employeeModel';
   import { useDesign } from '@/hooks/web/useDesign';
   import { useMessage } from '@/hooks/web/useMessage';
-  import ResetPasswordModal from './ResetPasswordModal.vue';
+  import ResetPasswordModal from './components/ResetPasswordModal.vue';
   import { useModal } from '@/components/Modal';
-  import EmployeeDesc from './EmployeeDesc.vue';
-  import AbsenceQuery from './AbsenceQuery.vue';
+  import EmployeeDesc from './components/EmployeeDesc.vue';
+  import AbsenceQuery from './components/AbsenceQuery.vue';
+  import AddItemSetting from './components/AddItemSetting.vue';
 
   defineOptions({
     name: 'EmployeeDetail',

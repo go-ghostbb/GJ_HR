@@ -143,3 +143,37 @@ export function getByDateRangeCheckInStatus(
     { errorMessageMode: mode },
   );
 }
+
+/**
+ * @description 查詢員工薪資加項
+ * @param params
+ * @param mode error mode
+ * @returns Promise
+ */
+export function getByKeywordSalaryAddItem(
+  params: { keyword?: string; id: number },
+  mode: ErrorMessageMode = 'message',
+) {
+  return defHttp.get<any>(
+    { url: `/v1/employee/${params.id}/salaryAddItem`, params: { keyword: params.keyword } },
+    { errorMessageMode: mode },
+  );
+}
+
+/**
+ * @description 設定員工加項金額
+ * @param employeeId employee id
+ * @param params param
+ * @param mode error mode
+ * @returns Promise
+ */
+export function setSalaryAddItem(
+  employeeId: number,
+  params: { salaryAddItemId: number; useCustom: boolean; customAmount: number },
+  mode: ErrorMessageMode = 'message',
+) {
+  return defHttp.patch(
+    { url: `/v1/employee/${employeeId}/salaryAddItem`, params },
+    { errorMessageMode: mode },
+  );
+}

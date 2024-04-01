@@ -10,7 +10,7 @@
 <script lang="ts" setup>
   import { EmployeeModel } from '@/api/manager/model/employeeModel';
   import { Description } from '@/components/Description';
-  import { detailDescSchema } from './data';
+  import { detailDescSchema } from '../data';
 
   const props = defineProps({
     employeeInfo: {

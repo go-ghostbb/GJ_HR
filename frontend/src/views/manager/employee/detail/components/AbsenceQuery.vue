@@ -4,7 +4,7 @@
 
 <script lang="ts" setup>
   import { BasicTable, useTable } from '@/components/Table';
-  import { absenceColumn, absenceSearchFormSchema } from './data';
+  import { absenceColumn, absenceSearchFormSchema } from '../data';
   import { getByDateRangeCheckInStatus } from '@/api/manager/employee';
 
   const props = defineProps({
@@ -22,7 +22,6 @@
       return params;
     },
     afterFetch: (record) => {
-      console.log(record);
       return record;
     },
     columns: absenceColumn,

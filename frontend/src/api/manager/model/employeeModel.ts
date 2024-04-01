@@ -28,6 +28,7 @@ export interface EmployeeModel extends BasicDatabaseModel {
   email?: string;
   mobile?: string;
   avatar?: string;
+  cardNumber?: string;
   loginInformation?: LoginInformationModel;
   roles?: RoleModel[];
   departmentId?: number;

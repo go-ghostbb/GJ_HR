@@ -109,6 +109,7 @@
       result.mobile = values.mobile;
       result.salary = Number(values.salary);
       result.salaryCycle = values.salaryCycle;
+      result.cardNumber = values.cardNumber;
       return result;
     } else {
       return values as EmployeeModel;

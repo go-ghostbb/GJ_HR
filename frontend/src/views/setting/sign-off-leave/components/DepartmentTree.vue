@@ -5,6 +5,7 @@
       toolbar
       search
       treeWrapperClassName="h-[calc(100%-35px)] overflow-auto"
+      :loading="loading"
       :clickRowToExpand="false"
       :treeData="treeData"
       :fieldNames="{ key: 'ID', title: 'name' }"
@@ -24,9 +25,12 @@
 
   const emit = defineEmits(['select']);
   const treeData = ref<TreeItem[]>([]);
+  const loading = ref(false);
 
   const fetch = async () => {
+    loading.value = true;
     treeData.value = (await getDepartmentByKeyword()) as unknown as TreeItem[];
+    loading.value = false;
   };
 
   /**

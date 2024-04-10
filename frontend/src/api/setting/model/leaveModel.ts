@@ -8,8 +8,8 @@ export enum LeavePay {
 }
 
 export enum LeaveCycle {
-  Default = 'default',
-  Annual = 'half',
+  Default = 'year',
+  Annual = 'annual',
   Calendar = 'calendar',
 }
 

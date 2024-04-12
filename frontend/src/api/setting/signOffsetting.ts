@@ -8,6 +8,7 @@ import {
   GetOvertimeSignOffSettingParams,
   OvertimeSignOffSettingModel,
 } from './model/overtimeSignOffSettingModel';
+import { CheckInSignOffSettingModel } from './model/checkInSignOffSettingModel';
 
 /**
  * @description 獲取請假簽核設定
@@ -81,6 +82,37 @@ export function updateOvertimeSignOffSettingBatch(
   return defHttp.put(
     {
       url: `/v1/signOff/overtime/${depratmentId}/${vacationId}/batch`,
+      params: { signOffSetting: setting },
+    },
+    { errorMessageMode: mode },
+  );
+}
+
+/**
+ * @description 獲取補打卡簽核設定
+ * @param mode error mode
+ * @returns Promise
+ */
+export function getCheckInSignOffSetting(mode: ErrorMessageMode = 'message') {
+  return defHttp.get<CheckInSignOffSettingModel[]>(
+    { url: '/v1/signOff/checkIn' },
+    { errorMessageMode: mode },
+  );
+}
+
+/**
+ * @description 批量更新補打卡簽核設定
+ * @param setting CheckInSignOffSettingModel[]
+ * @param mode error mode
+ * @returns Promise
+ */
+export function updateCheckInSignOffSettingBatch(
+  setting: CheckInSignOffSettingModel[],
+  mode: ErrorMessageMode = 'message',
+) {
+  return defHttp.put(
+    {
+      url: `/v1/signOff/checkIn/batch`,
       params: { signOffSetting: setting },
     },
     { errorMessageMode: mode },

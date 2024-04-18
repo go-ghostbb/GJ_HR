@@ -304,13 +304,30 @@
       await updateWorkScheduleBatch(
         employeeId.value,
         calenderValue.value.format('YYYY-MM'),
-        scheduleData.value,
+        formatScheduleData(calenderValue.value, scheduleData.value),
       );
       useMessage().createMessage.success({ content: '儲存成功' });
     } finally {
       setSetting(false);
       loading.value = false;
     }
+  };
+
+  /**
+   * @description 只獲取當月資料
+   * @param date
+   * @param schedule
+   */
+  const formatScheduleData = (date: Dayjs, schedule: WorkScheduleModel[]): WorkScheduleModel[] => {
+    const result: WorkScheduleModel[] = [];
+    schedule.forEach((s) => {
+      const scheduleDate = dayjs(s.scheduleDate);
+      if (scheduleDate.format('YYYY-MM') === date.format('YYYY-MM')) {
+        result.push(s);
+      }
+    });
+
+    return result;
   };
 
   /**

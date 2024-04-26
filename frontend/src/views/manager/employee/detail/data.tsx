@@ -11,6 +11,7 @@ import { BasicColumn, FormSchema } from '@/components/Table';
 import { Checkbox, Tag } from 'ant-design-vue';
 import dayjs from 'dayjs';
 import { CheckOutlined } from '@ant-design/icons-vue';
+import 'dayjs/plugin/timezone';
 
 export const detailDescSchema: DescItem[] = [
   {
@@ -107,8 +108,7 @@ export const absenceColumn: BasicColumn[] = [
     fixed: 'left',
     width: 100,
     customRender: ({ record }) => {
-      const date = dayjs(record.workCheckInDate);
-      return date.format('YYYY-MM-DD');
+      return record.date;
     },
   },
   {
@@ -150,11 +150,10 @@ export const absenceColumn: BasicColumn[] = [
         title: '出勤時間',
         width: 100,
         customRender: ({ record }) => {
-          const time = dayjs(record.workAttendTime).tz('UTC').format('HH:mm:ss');
-          if (time === '00:00:00') {
+          if (!record.workCheckIn) {
             return '';
           }
-          return time;
+          return dayjs(record.workCheckIn).format('HH:mm:ss');
         },
       },
       {
@@ -196,11 +195,10 @@ export const absenceColumn: BasicColumn[] = [
         title: '出勤時間',
         width: 100,
         customRender: ({ record }) => {
-          const time = dayjs(record.offWorkAttendTime).tz('UTC').format('HH:mm:ss');
-          if (time === '00:00:00') {
+          if (!record.offWorkCheckIn) {
             return '';
           }
-          return time;
+          return dayjs(record.offWorkCheckIn).format('HH:mm:ss');
         },
       },
       {

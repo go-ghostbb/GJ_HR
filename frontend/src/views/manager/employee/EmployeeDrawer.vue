@@ -94,7 +94,6 @@
   const formatValue = (values: any): EmployeeModel => {
     //-因為從form裡面出來的日期是string
     //-需要進行轉換
-    values.hireDate = new Date(values.hireDate);
     values.birth = new Date(values.birth);
 
     //-以下核心

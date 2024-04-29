@@ -201,7 +201,7 @@
     try {
       loading.value = true;
 
-      if (props.departmentId !== 0) {
+      if (props.departmentId && props.vacationId != undefined) {
         const setting = await getOvertimeSignOffSetting({
           vacationId: props.vacationId!,
           departmentId: props.departmentId,

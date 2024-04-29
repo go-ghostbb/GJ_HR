@@ -18,8 +18,8 @@ export enum SalaryCycle {
  */
 export interface EmployeeModel extends BasicDatabaseModel {
   code?: string;
-  hireDate?: Date;
-  terminationDate?: Date;
+  hireDate?: string;
+  terminationDate?: string;
   employmentStatus?: string;
   backend?: boolean;
   realName?: string;

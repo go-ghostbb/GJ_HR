@@ -113,6 +113,12 @@ export const formSchema: FormSchema[] = [
     },
   },
   {
+    field: 'weight',
+    label: '權重',
+    required: true,
+    component: 'InputNumber',
+  },
+  {
     label: '顏色',
     field: 'color',
     defaultValue: '#0BFA49',
@@ -128,53 +134,5 @@ export const formSchema: FormSchema[] = [
     componentProps: {
       rows: 6,
     },
-  },
-];
-
-export const overtimeColumns: BasicColumn[] = [
-  {
-    title: '時數(開始)',
-    dataIndex: 'start',
-    editComponent: 'InputNumber',
-    editRule: (_, record) => {
-      return new Promise<string>((resolve, _) => {
-        if (!record.start) {
-          resolve('請輸入');
-        }
-        if (record.end) {
-          if (record.end < record.start) {
-            resolve('開始時數必須小於等於結束時數');
-          }
-        }
-        resolve('');
-      });
-    },
-    editRow: true,
-  },
-  {
-    title: '時數(結束)',
-    dataIndex: 'end',
-    editComponent: 'InputNumber',
-    editRule: (_, record) => {
-      return new Promise<string>((resolve, _) => {
-        if (!record.end) {
-          resolve('請輸入');
-        }
-        if (record.start) {
-          if (record.end < record.start) {
-            resolve('開始時數必須小於等於結束時數');
-          }
-        }
-        resolve('');
-      });
-    },
-    editRow: true,
-  },
-  {
-    title: '倍率',
-    dataIndex: 'multiply',
-    editComponent: 'InputNumber',
-    editRule: true,
-    editRow: true,
   },
 ];

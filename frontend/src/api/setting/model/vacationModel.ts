@@ -8,6 +8,7 @@ export interface VacationModel extends BasicDatabaseModel {
   status?: boolean;
   remark?: string;
   color?: string;
+  weight?: number;
   schedule?: VacationScheduleModel[];
   overtimeRate?: VacationGroupOvertimeRateModel[];
 }

@@ -131,7 +131,7 @@
    * @description 點擊新增
    */
   const handleCreate = () => {
-    scheduleMethod.openDrawer(true, { isUpdate: false, date: currDate });
+    scheduleMethod.openDrawer(true, { isUpdate: false, date: currDate.value.format('YYYY-MM-DD') });
   };
 
   /**

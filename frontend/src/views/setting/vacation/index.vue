@@ -4,7 +4,7 @@
       <template #expandedRowRender="{ record }">
         <div style="display: flex">
           <div style="width: 35%">
-            <GroupCard :vacationId="record.ID" />
+            <GroupCard :vacationId="(record as VacationModel).ID" />
           </div>
         </div>
       </template>
@@ -15,8 +15,9 @@
         </a-button>
       </template>
       <template #bodyCell="{ column, record }">
-        <template v-if="column.key === 'action'">
+        <template v-if="(column as any).key === 'action'">
           <TableAction
+            v-if="(record as VacationModel).ID !== 0"
             :actions="[
               {
                 icon: 'clarity:note-edit-line',
@@ -62,6 +63,14 @@
   const [registerTable, { reload, setLoading }] = useTable({
     title: '休假日列表',
     api: getVacationByKeyword,
+    afterFetch: (record: VacationModel[]) => {
+      record.unshift({
+        ID: 0,
+        name: '工作日',
+        status: true,
+      });
+      return record;
+    },
     columns,
     formConfig: {
       labelWidth: 120,

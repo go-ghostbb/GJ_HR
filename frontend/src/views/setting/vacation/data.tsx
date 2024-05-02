@@ -43,6 +43,7 @@ export const columns: BasicColumn[] = [
       return (
         <Switch
           // disabled={!usePermission().hasPermission('role:update:status')}
+          disabled={record.ID === 0}
           checked={record.status}
           checkedChildren={'啟用'}
           unCheckedChildren={'禁用'}

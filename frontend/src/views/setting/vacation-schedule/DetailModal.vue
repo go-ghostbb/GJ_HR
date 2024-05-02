@@ -66,7 +66,7 @@
   import { Description } from '@/components/Description';
   import { reactive, ref } from 'vue';
   import { useDrawer } from '@/components/Drawer';
-  import ScheduleModal from './ScheduleModal.vue';
+  import ScheduleModal from './ScheduleDrawer.vue';
   import ConfirmModal from './ConfirmModal.vue';
   import { FileAddOutlined } from '@ant-design/icons-vue';
   import dayjs, { Dayjs } from 'dayjs';
@@ -145,6 +145,7 @@
   /**
    * @description 刪除
    * @param record
+   * @param deleteType
    */
   const handleDelete = async (record: VacationScheduleModel, deleteType?: 'all' | 'one') => {
     if (record.repeat && record.repeat !== 'none' && !deleteType) {
@@ -162,8 +163,8 @@
       useMessage().createMessage.success({ content: '刪除成功' });
       changeLoading(true);
       emit('reload', currDate.value);
-    } finally {
-      console.error('刪除失敗');
+    } catch (error) {
+      console.error('刪除失敗', error);
     }
   };
 

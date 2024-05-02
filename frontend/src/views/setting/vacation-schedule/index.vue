@@ -88,7 +88,7 @@
       </Calendar>
     </div>
     <!-- modal -->
-    <ScheduleModal @register="registerScheduleDrawer" @success="handleSuccess" />
+    <ScheduleDrawer @register="registerScheduleDrawer" @success="handleSuccess" />
     <DetailModal ref="detailModalRef" @register="registerDetailModal" @reload="reload" />
   </div>
 </template>
@@ -105,7 +105,7 @@
   import { getVacationScheduleByDate } from '@/api/setting/vacation';
   import { VacationScheduleModel } from '@/api/setting/model/vacationScheduleModel';
   import DetailModal from './DetailModal.vue';
-  import ScheduleModal from './ScheduleModal.vue';
+  import ScheduleDrawer from './ScheduleDrawer.vue';
   import { useDrawer } from '@/components/Drawer';
   import { useMessage } from '@/hooks/web/useMessage';
   import { useModal } from '@/components/Modal';
@@ -249,7 +249,7 @@
     const schedule: VacationScheduleModel[] = [];
     //-遍歷
     scheduleData.value.forEach((s) => {
-      const scheduleDay = dayjs(s.scheduleDate);
+      const scheduleDay: Dayjs = dayjs(s.scheduleDate);
       if (
         scheduleDay.year() === date.year() &&
         scheduleDay.month() === date.month() &&

@@ -34,6 +34,9 @@
   //-控制vacation fetch只執行一次
   const vacationOnce = ref(false);
 
+  //-預設選擇的休假日
+  const defaultVacationId = ref(0);
+
   //-form設定
   const [register, { validate, resetFields, setFieldsValue, updateSchema }] = useForm({
     schemas: scheduleFormSchema,
@@ -55,8 +58,10 @@
         ...data.record,
       });
     } else {
+      setFieldsValue({ vacationId: defaultVacationId.value });
       if (data.date) {
         setFieldsValue({
+          vacationId: defaultVacationId.value,
           startDate: data.date,
           endDate: data.date,
           endRepeat: data.date,
@@ -66,13 +71,18 @@
 
     //-下面fetch只會執行一次, 由vacationOnce控制
     if (!vacationOnce.value) {
-      const vacation = await getVacationByKeyword();
-      updateSchema({
-        field: 'vacationId',
-        componentProps: {
-          options: vacation.items,
-        },
-      });
+      const vacation = await getVacationByKeyword({ status: true });
+      if (vacation.items.length > 0) {
+        defaultVacationId.value = vacation.items[0].ID;
+        setFieldsValue({ vacationId: defaultVacationId.value });
+        updateSchema({
+          field: 'vacationId',
+          defaultValue: vacation.items[0].ID,
+          componentProps: {
+            options: vacation.items,
+          },
+        });
+      }
       vacationOnce.value = true;
     }
   });
@@ -87,10 +97,6 @@
       const values = await validate();
 
       //-向下執行代表驗證成功
-      // 日期轉換
-      values.startDate = new Date(values.startDate);
-      values.endDate = new Date(values.endDate);
-      values.endRepeat = new Date(values.endRepeat);
       if (!unref(isUpdate)) {
         //-創建
         await createVacationSchedule(values as VacationScheduleModel);

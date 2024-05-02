@@ -2,7 +2,6 @@ import { setStatus } from '@/api/setting/vacation';
 import { BasicColumn, FormSchema } from '@/components/Table';
 import { useMessage } from '@/hooks/web/useMessage';
 import { Switch } from 'ant-design-vue';
-import dayjs from 'dayjs';
 
 export const columns: BasicColumn[] = [
   {
@@ -64,14 +63,6 @@ export const columns: BasicColumn[] = [
           }}
         ></Switch>
       );
-    },
-  },
-  {
-    title: '建立時間',
-    width: 180,
-    customRender: ({ record }) => {
-      const date = dayjs(record.CreatedAt);
-      return date.format('YYYY-MM-DD HH:mm');
     },
   },
   {

@@ -8,7 +8,6 @@ export const scheduleFormSchema: FormSchema[] = [
     field: 'vacationId',
     label: '休假日類別',
     component: 'Select',
-    defaultValue: 1,
     componentProps: {
       fieldNames: { label: 'name', value: 'ID' },
       allowClear: false,

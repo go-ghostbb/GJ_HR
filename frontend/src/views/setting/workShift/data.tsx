@@ -12,13 +12,6 @@ export const columns: BasicColumn[] = [
     },
   },
   {
-    title: '班別代碼',
-    width: 200,
-    customRender: ({ record }) => {
-      return record.code;
-    },
-  },
-  {
     title: '顏色',
     width: 50,
     customRender: ({ record }) => {
@@ -34,6 +27,20 @@ export const columns: BasicColumn[] = [
           }}
         ></div>
       );
+    },
+  },
+  {
+    title: '班別代碼',
+    width: 100,
+    customRender: ({ record }) => {
+      return record.code;
+    },
+  },
+  {
+    title: '上班時間',
+    width: 200,
+    customRender: ({ record }) => {
+      return `${record.workStart} ~ ${record.workEnd}`;
     },
   },
   {

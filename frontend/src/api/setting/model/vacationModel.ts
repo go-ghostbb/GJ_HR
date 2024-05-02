@@ -17,5 +17,5 @@ export interface VacationModel extends BasicDatabaseModel {
  */
 export interface GetVacationByKeywordParams extends BasicPageParams {
   keyword?: string;
-  status?: string;
+  status?: boolean;
 }

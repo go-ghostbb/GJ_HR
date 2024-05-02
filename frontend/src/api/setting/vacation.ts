@@ -12,6 +12,7 @@ import {
 /**
  * @description 根據keyword獲取vacation
  * @param params 查詢參數
+ * @param mode
  */
 export function getVacationByKeyword(
   params?: GetVacationByKeywordParams,

@@ -9,14 +9,14 @@ export enum VacationScheduleRepeat {
 }
 
 export interface VacationScheduleModel extends BasicDatabaseModel {
-  scheduleDate?: Date;
+  scheduleDate?: string;
   generalKey?: string;
   vacationId?: number;
   vacation?: VacationModel;
-  startDate?: Date;
-  endDate?: Date;
+  startDate?: string;
+  endDate?: string;
   repeat?: VacationScheduleRepeat;
-  endRepeat?: Date;
+  endRepeat?: string;
 }
 
 /**

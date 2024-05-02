@@ -120,6 +120,7 @@
     </Calendar>
 
     <CopyModal @register="registerCopyModal" />
+    <DetailModal ref="detailModalRef" @register="registerDetailModal" @reload="reload" />
   </div>
 </template>
 
@@ -140,15 +141,23 @@
   import { useMessage } from '@/hooks/web/useMessage';
   import CopyModal from './CopyModal.vue';
   import { useModal } from '@/components/Modal';
+  import DetailModal from './DetailModal.vue';
 
   const { prefixCls } = useDesign('work-schedule-setting-modal');
 
   const emit = defineEmits(['setting']);
 
+  //-CopyModal註冊
   const [registerCopyModal, copyMethod] = useModal();
+
+  //-DetailModal註冊
+  const [registerDetailModal, detailMethod] = useModal();
 
   //-loading
   const loading = ref(false);
+
+  //-detail modal ref
+  const detailModalRef = ref();
 
   //-班別下拉式選單
   const workShiftOptions = ref<{ label: string; value: string }[]>([]);
@@ -217,9 +226,35 @@
         //-設定模式下
         onSelectIsSetting(date);
       } else {
-        // TODO 不是設定模式下
+        //-不是設定模式下
+        onSelectIsNotSetting(date);
       }
     }
+  };
+
+  /**
+   * @description 不在設定模式下面板被選擇時
+   * @param date
+   */
+  const onSelectIsNotSetting = (date: Dayjs) => {
+    const temp = cloneDeep(scheduleData.value);
+    const thisDay: WorkScheduleModel[] = [];
+
+    //-找出date的schedule
+    temp.forEach((schedule, _index) => {
+      const scheduleDay = dayjs(schedule.scheduleDate);
+      if (
+        scheduleDay.year() === date.year() &&
+        scheduleDay.month() === date.month() &&
+        scheduleDay.date() === date.date() &&
+        schedule.workShift
+      ) {
+        thisDay.push(schedule);
+      }
+    });
+
+    //-打開detail modal
+    detailMethod.openModal(true, { date, schedule: thisDay });
   };
 
   /**
@@ -269,7 +304,7 @@
       // }
       temp.push({
         ID: 0,
-        scheduleDate: date.toDate(),
+        scheduleDate: date.format('YYYY-MM-DD'),
         employeeId: employeeId.value,
         workShiftId: workShiftSelect.value?.ID,
         workShift: workShiftSelect.value,
@@ -310,6 +345,7 @@
     } finally {
       setSetting(false);
       loading.value = false;
+      await fetch(calenderValue.value);
     }
   };
 
@@ -437,6 +473,30 @@
       result.push({ label: workShift.name!, value: JSON.stringify(workShift) });
     });
     workShiftOptions.value = result;
+  };
+
+  /**
+   * @description reload
+   * @param date
+   */
+  const reload = async (date: Dayjs) => {
+    //-重新fetch
+    await fetch(date);
+    //-尋找schedule
+    const schedule: WorkScheduleModel[] = [];
+    //-遍歷
+    scheduleData.value.forEach((s) => {
+      const scheduleDay: Dayjs = dayjs(s.scheduleDate);
+      if (
+        scheduleDay.year() === date.year() &&
+        scheduleDay.month() === date.month() &&
+        scheduleDay.date() === date.date()
+      ) {
+        //-如果年月日相同, push結果
+        schedule.push(s);
+      }
+    });
+    detailModalRef.value.updateData(schedule);
   };
 
   defineExpose({ loadDate });

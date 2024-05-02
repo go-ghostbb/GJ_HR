@@ -6,10 +6,10 @@ export interface WorkShiftModel extends BasicDatabaseModel {
   name?: string;
   status?: boolean;
   remark?: string;
-  workStart?: Date;
-  workEnd?: Date;
-  restStart?: Date;
-  restEnd?: Date;
+  workStart?: string;
+  workEnd?: string;
+  restStart?: string;
+  restEnd?: string;
   totalHours?: number;
   color?: string;
 }
@@ -23,7 +23,7 @@ export interface GetWorkShiftByKeywordParams extends BasicPageParams {
 }
 
 export interface WorkScheduleModel extends BasicDatabaseModel {
-  scheduleDate?: Date;
+  scheduleDate?: string;
   employeeId?: number;
   employee?: EmployeeModel;
   workShiftId?: number;

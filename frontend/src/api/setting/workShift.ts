@@ -11,6 +11,7 @@ import {
 /**
  * @description 根據keyword獲取workShift
  * @param params 查詢參數
+ * @param mode
  */
 export function getWorkShiftByKeyword(
   params?: GetWorkShiftByKeywordParams,
@@ -89,6 +90,7 @@ export function getWorkScheduleByDate(
 /**
  * @description 批量更新schedule
  * @param employeeId employee id
+ * @param yearMonth
  * @param schedules WorkScheduleModel[]
  * @param mode error mode
  * @returns Promise
@@ -103,4 +105,13 @@ export function updateWorkScheduleBatch(
     { url: `/v1/workShift/schedule/${employeeId}/batch`, params: { schedules, yearMonth } },
     { errorMessageMode: mode },
   );
+}
+
+/**
+ * @description 刪除班表
+ * @param id
+ * @param mode
+ */
+export function deleteWorkSchedule(id: number, mode: ErrorMessageMode = 'message') {
+  return defHttp.delete({ url: `/v1/workShift/schedule/${id}` }, { errorMessageMode: mode });
 }

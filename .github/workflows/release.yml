@@ -17,6 +17,10 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Normalise version
+        id: normalise_version
+        run: echo "::set-output name=version::${GITHUB_REF#refs/tags/v}"
+
       - name: Set up Go
         uses: actions/setup-go@v5
         with:
@@ -34,7 +38,11 @@ jobs:
         run: choco install nsis
 
       - name: Build HRMS
-        run: make wails-build
+        shell: bash
+        run: |
+          jq '.info.productVersion = "v${{ steps.normalise_version.outputs.version }}"' wails.json > tmp.json
+          mv tmp.json wails.json
+          make wails-build
 
       - name: Run GoReleaser
         uses: goreleaser/goreleaser-action@v5
@@ -46,8 +54,9 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: HRMS-windows
-          path: build/bin/*
+      - name: Upload Release Asset
+        uses: alexellis/upload-assets@0.4.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          with:
+            asset_paths: '["build/bin/HRMS*"]'

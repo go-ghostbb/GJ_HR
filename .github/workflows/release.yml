@@ -44,7 +44,7 @@ jobs:
       - name: Build HRMS
         shell: bash
         run: |
-          jq '.info.productVersion = "v${{ steps.normalise_version.outputs.version }}"' wails.json > tmp.json
+          jq '.info.productVersion = "${{ steps.normalise_version.outputs.version }}"' wails.json > tmp.json
           mv tmp.json wails.json
           make wails-build
 

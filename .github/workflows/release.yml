@@ -19,7 +19,10 @@ jobs:
 
       - name: Normalise version
         id: normalise_version
-        run: echo "::set-output name=version::${GITHUB_REF#refs/tags/v}"
+        run: |
+          version=$(echo "${GITHUB_REF#refs/tags/}" | sed -e 's/v//g')
+          echo "Version is $version"
+          echo "version=$version" >> "$GITHUB_OUTPUT"
 
       - name: Set up Go
         uses: actions/setup-go@v5

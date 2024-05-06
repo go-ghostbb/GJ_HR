@@ -121,9 +121,7 @@ export function resetPassword(
 
 /**
  * @description 根據區間和員工ID獲取打卡狀態
- * @param id employee id
- * @param dateRange date range
- * @param abnormal abnormal
+ * @param params
  * @param mode error mode
  * @returns Promise
  */

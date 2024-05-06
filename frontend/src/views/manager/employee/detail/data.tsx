@@ -12,6 +12,7 @@ import { Checkbox, Tag } from 'ant-design-vue';
 import dayjs from 'dayjs';
 import { CheckOutlined } from '@ant-design/icons-vue';
 import 'dayjs/plugin/timezone';
+import { RuleObject } from 'ant-design-vue/lib/form/interface';
 
 export const detailDescSchema: DescItem[] = [
   {
@@ -276,6 +277,18 @@ export const absenceSearchFormSchema: FormSchema[] = [
     label: '日期區間',
     component: 'RangePicker',
     required: true,
+    rules: [
+      {
+        validator: (_rule: RuleObject, value: string[]) => {
+          const start = dayjs(value[0]);
+          const end = dayjs(value[1]);
+          if (end.diff(start, 'year') >= 1) {
+            return Promise.reject('選取範圍不能超過一年');
+          }
+          return Promise.resolve();
+        },
+      },
+    ],
     componentProps: {
       format: 'YYYY-MM-DD',
       valueFormat: 'YYYY-MM-DD',

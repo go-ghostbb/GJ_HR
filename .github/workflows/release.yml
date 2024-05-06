@@ -58,5 +58,5 @@ jobs:
         uses: alexellis/upload-assets@0.4.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          with:
-            asset_paths: '["build/bin/HRMS*"]'
+        with:
+          asset_paths: '["build/bin/HRMS*"]'

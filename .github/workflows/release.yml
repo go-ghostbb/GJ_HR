@@ -19,6 +19,7 @@ jobs:
 
       - name: Normalise version
         id: normalise_version
+        shell: bash
         run: |
           version=$(echo "${GITHUB_REF#refs/tags/}" | sed -e 's/v//g')
           echo "Version is $version"

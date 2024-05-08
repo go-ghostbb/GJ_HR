@@ -115,6 +115,7 @@ const basicInfoFormSchema: FormSchema[] = [
     field: 'birth',
     label: '生日',
     component: 'DatePicker',
+    defaultValue: dayjs(new Date()),
     componentProps: {
       valueFormat: 'YYYY-MM-DD',
       allowClear: false,
@@ -135,7 +136,7 @@ const basicInfoFormSchema: FormSchema[] = [
   },
 ];
 
-const salayFormSchema: FormSchema[] = [
+const salaryFormSchema: FormSchema[] = [
   {
     field: 'salaryDivider',
     label: '薪資設定',
@@ -229,5 +230,5 @@ export const formSchema: FormSchema[] = [
     component: 'Input',
   },
   ...basicInfoFormSchema,
-  ...salayFormSchema,
+  ...salaryFormSchema,
 ];

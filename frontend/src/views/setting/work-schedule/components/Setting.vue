@@ -379,7 +379,11 @@
    * @description 點擊複製
    */
   const clickCopy = () => {
-    copyMethod.openModal(true, { schedules: scheduleData.value, employeeId: employeeId.value });
+    copyMethod.openModal(true, {
+      schedules: scheduleData.value,
+      employeeId: employeeId.value,
+      date: calenderValue.value,
+    });
   };
 
   /**

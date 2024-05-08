@@ -9,3 +9,11 @@ export function Start(arg1) {
 export function UploadData() {
   return window['go']['service']['checkInService']['UploadData']();
 }
+
+export function UploadTxtData() {
+  return window['go']['service']['checkInService']['UploadTxtData']();
+}
+
+export function UploadTxtDataDir() {
+  return window['go']['service']['checkInService']['UploadTxtDataDir']();
+}

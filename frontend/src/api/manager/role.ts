@@ -6,9 +6,10 @@ import { BasicFetchResult } from '../model/baseModel';
 /**
  * @description 根據keyword獲取role
  * @param params 查詢參數
+ * @param mode
  */
 export function getRoleByKeyword(
-  params: GetRoleByKeywordParams,
+  params?: GetRoleByKeywordParams,
   mode: ErrorMessageMode = 'message',
 ) {
   return defHttp.get<BasicFetchResult<RoleModel>>(

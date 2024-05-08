@@ -92,10 +92,6 @@
    * @param values
    */
   const formatValue = (values: any): EmployeeModel => {
-    //-因為從form裡面出來的日期是string
-    //-需要進行轉換
-    values.birth = new Date(values.birth);
-
     //-以下核心
     const result = record.value;
     if (result) {

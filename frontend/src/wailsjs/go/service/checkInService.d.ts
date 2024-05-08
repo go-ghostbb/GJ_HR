@@ -6,3 +6,7 @@ import {types} from '../models';
 export function Start(arg1:context.Context):Promise<void>;
 
 export function UploadData():Promise<types.JSResp>;
+
+export function UploadTxtData():Promise<types.JSResp>;
+
+export function UploadTxtDataDir():Promise<types.JSResp>;

@@ -175,3 +175,16 @@ export function setSalaryAddItem(
     { errorMessageMode: mode },
   );
 }
+
+/**
+ * @description 設定員工角色
+ * @param empId
+ * @param roleId
+ * @param mode
+ */
+export function setRoles(empId: number, roleId: number[], mode: ErrorMessageMode = 'message') {
+  return defHttp.patch(
+    { url: `/v1/employee/${empId}/roles`, params: { roleId } },
+    { errorMessageMode: mode },
+  );
+}

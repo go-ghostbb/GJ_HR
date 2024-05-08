@@ -1,91 +1,28 @@
+import { BasicColumn, FormSchema } from '@/components/Table';
+import dayjs from 'dayjs';
 import {
   CheckInProcStatus,
   OffWorkAttendStatus,
   WorkAttendStatus,
 } from '@/api/manager/model/checkInStatus';
-import { DepartmentModel } from '@/api/manager/model/departmentModel';
-import { EmploymentStatus } from '@/api/manager/model/employeeModel';
-import { SalaryType } from '@/api/setting/model/salaryAddItemModel';
-import { DescItem } from '@/components/Description';
-import { BasicColumn, FormSchema } from '@/components/Table';
-import { Checkbox, Tag } from 'ant-design-vue';
-import dayjs from 'dayjs';
-import { CheckOutlined } from '@ant-design/icons-vue';
-import 'dayjs/plugin/timezone';
 import { RuleObject } from 'ant-design-vue/lib/form/interface';
+import { Checkbox } from 'ant-design-vue';
 
-export const detailDescSchema: DescItem[] = [
-  {
-    field: 'realName',
-    label: '姓名',
-  },
-  {
-    field: 'nationalId',
-    label: '身份證字號',
-  },
-  {
-    field: 'birth',
-    label: '生日',
-    render: (curVal, _) => {
-      const date = dayjs(curVal);
-      return date.format('YYYY-MM-DD');
-    },
-  },
-  {
-    field: 'email',
-    label: '信箱',
-  },
-  {
-    field: 'mobile',
-    label: '手機號碼',
-  },
-  {
-    field: 'department',
-    label: '部門',
-    render: (curVal: DepartmentModel, _) => {
-      return curVal.name;
-    },
-  },
-  {
-    field: 'hireDate',
-    label: '入職時間',
-    render: (curVal, _) => {
-      const date = dayjs(curVal);
-      return date.format('YYYY-MM-DD');
-    },
-  },
-  {
-    field: 'employmentStatus',
-    label: '就職狀態',
-    render: (curVal: EmploymentStatus, _) => {
-      let color: string;
-      let text: string;
-      switch (curVal) {
-        case EmploymentStatus.Active:
-          text = '在職';
-          color = 'green';
-          break;
-        case EmploymentStatus.UnpaidLeave:
-          text = '停薪留職';
-          color = '';
-          break;
-        case EmploymentStatus.Resigned:
-          text = '離職';
-          color = 'red';
-          break;
-      }
-      return <Tag color={color}>{text}</Tag>;
-    },
-  },
-];
-
-export const absenceColumn: BasicColumn[] = [
+export const column: BasicColumn[] = [
   {
     title: '員工編號',
     fixed: 'left',
     width: 100,
     customRender: ({ record }) => {
       return record.employee.code;
+    },
+  },
+  {
+    title: '員工姓名',
+    fixed: 'left',
+    width: 100,
+    customRender: ({ record }) => {
+      return record.employee.realName;
     },
   },
   {
@@ -238,7 +175,7 @@ export const absenceColumn: BasicColumn[] = [
     title: '缺勤時數',
     width: 100,
     customRender: ({ record }) => {
-      return record.absenceHours;
+      return Math.round(record.absenceHours * 100) / 100;
     },
   },
   {
@@ -271,15 +208,25 @@ export const absenceColumn: BasicColumn[] = [
   },
 ];
 
-export const absenceSearchFormSchema: FormSchema[] = [
+export const searchFormSchema: FormSchema[] = [
+  {
+    field: 'keyword',
+    label: '關鍵字',
+    component: 'Input',
+    colProps: { span: 4 },
+  },
   {
     field: 'dateRange',
     label: '日期區間',
+    labelWidth: 120,
     component: 'RangePicker',
     required: true,
     rules: [
       {
         validator: (_rule: RuleObject, value: string[]) => {
+          if (!value || value.length < 0) {
+            return Promise.reject('');
+          }
           const start = dayjs(value[0]);
           const end = dayjs(value[1]);
           if (end.diff(start, 'year') >= 1) {
@@ -303,7 +250,7 @@ export const absenceSearchFormSchema: FormSchema[] = [
   },
   {
     field: 'abnormal',
-    component: 'Input',
+    component: 'Checkbox',
     defaultValue: true,
     render: ({ model, field }) => {
       return (
@@ -315,71 +262,6 @@ export const absenceSearchFormSchema: FormSchema[] = [
         </Checkbox>
       );
     },
-    colProps: { span: 8 },
-  },
-];
-
-export const addItemColumn: BasicColumn[] = [
-  {
-    title: '名稱',
-    customRender: ({ record }) => {
-      return record.name;
-    },
-  },
-  {
-    title: '薪資類型',
-    customRender: ({ record }) => {
-      switch (record.salaryType) {
-        case SalaryType.FixedSalary:
-          return '固定薪資';
-        case SalaryType.NonFixedSalary:
-          return '非固定薪資';
-      }
-    },
-  },
-  {
-    title: '所得稅',
-    customRender: ({ record }) => {
-      if (record.incomeTax) {
-        return <CheckOutlined />;
-      }
-      return '-';
-    },
-  },
-  {
-    title: '職工福利金',
-    customRender: ({ record }) => {
-      if (record.benefits) {
-        return <CheckOutlined />;
-      }
-      return '-';
-    },
-  },
-  {
-    title: '補充保費',
-    customRender: ({ record }) => {
-      if (record.premiums) {
-        return <CheckOutlined />;
-      }
-      return '-';
-    },
-  },
-  {
-    title: '預設/單位金額',
-    customRender: ({ record }) => {
-      if (record.useCustom) {
-        return '*' + record.customAmount;
-      }
-      return record.amount;
-    },
-  },
-];
-
-export const addItemSearchFormSchema: FormSchema[] = [
-  {
-    field: 'keyword',
-    label: '關鍵字',
-    component: 'Input',
-    colProps: { span: 8 },
+    colProps: { span: 2 },
   },
 ];

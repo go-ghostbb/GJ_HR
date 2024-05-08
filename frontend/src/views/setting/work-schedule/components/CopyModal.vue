@@ -32,6 +32,7 @@
   import { useMessage } from '@/hooks/web/useMessage';
   import { DataNode } from 'ant-design-vue/es/vc-tree/interface';
   import { onMounted, ref } from 'vue';
+  import dayjs, { Dayjs } from 'dayjs';
 
   const emit = defineEmits(['success', 'register']);
 
@@ -43,6 +44,9 @@
 
   //-準備複製的資料
   const schedules = ref<WorkScheduleModel[]>([]);
+
+  //-日期
+  const date = ref<Dayjs>(dayjs());
 
   //-員工列表
   // 將員工資料存在這, 只會執行一次fetch
@@ -58,6 +62,7 @@
       changeLoading(true);
 
       schedules.value = data.schedules;
+      date.value = data.date;
       const employeeId = data.employeeId;
 
       //-treeData設定
@@ -108,7 +113,7 @@
       setModalProps({ confirmLoading: true });
       const empIDs = filterID(checkedKeys.value);
       for (let i = 0; i < empIDs.length; i++) {
-        await updateWorkScheduleBatch(empIDs[i], schedules.value);
+        await updateWorkScheduleBatch(empIDs[i], date.value.format('YYYY-MM'), schedules.value);
       }
       useMessage().createMessage.success({ content: '設定成功' });
       emit('success');

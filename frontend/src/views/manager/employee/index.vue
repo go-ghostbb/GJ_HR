@@ -17,6 +17,12 @@
                 onClick: handleView.bind(null, record as EmployeeModel),
               },
               {
+                icon: 'ant-design:setting-outlined',
+                tooltip: '角色設定',
+                color: 'warning',
+                onClick: handleRoleSetting.bind(null, record as EmployeeModel),
+              },
+              {
                 auth: 'employee:edit',
                 icon: 'clarity:note-edit-line',
                 tooltip: '編輯',
@@ -39,6 +45,7 @@
       </template>
     </BasicTable>
     <EmployeeDrawer @register="registerDrawer" @success="handleSuccess" />
+    <RoleSettingModal @register="roleSettingModal" @success="handleSuccess" />
   </PageWrapper>
 </template>
 
@@ -53,7 +60,9 @@
   import { useGo } from '@/hooks/web/usePage';
   import { useDrawer } from '@/components/Drawer';
   import DepartmentTree from './DepartmentTree.vue';
+  import RoleSettingModal from './RoleSettingModal.vue';
   import { ref } from 'vue';
+  import { useModal } from '@/components/Modal';
 
   defineOptions({
     name: 'EmployeeManager',
@@ -65,6 +74,9 @@
 
   //-drawer註冊
   const [registerDrawer, { openDrawer }] = useDrawer();
+
+  //-RoleSettingModal註冊
+  const [roleSettingModal, roleSettingMethod] = useModal();
 
   //-所選的部門ID
   const selectDeptID = ref<number>();
@@ -86,7 +98,7 @@
     bordered: true,
     showIndexColumn: false,
     actionColumn: {
-      width: 120,
+      width: 160,
       title: '操作',
       dataIndex: 'action',
       // slots: { customRender: 'action' },
@@ -124,7 +136,7 @@
 
   /**
    * @description 編輯按鈕事件
-   * @param record: EmployeeModel
+   * @param record
    */
   const handleEdit = (record: EmployeeModel) => {
     openDrawer(true, {
@@ -135,7 +147,7 @@
 
   /**
    * @description 刪除按鈕事件
-   * @param record: EmployeeModel
+   * @param record
    */
   const handleDelete = (record: EmployeeModel) => {
     setLoading(true);
@@ -149,6 +161,14 @@
         useMessage().createMessage.error({ content: '刪除失敗' });
         setLoading(false);
       });
+  };
+
+  /**
+   * @description 設定角色事件
+   * @param record
+   */
+  const handleRoleSetting = (record: EmployeeModel) => {
+    roleSettingMethod.openModal(true, { employee: record });
   };
 
   /**

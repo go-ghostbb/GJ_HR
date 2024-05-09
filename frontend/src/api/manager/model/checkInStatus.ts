@@ -27,12 +27,11 @@ export interface CheckInStatusModel extends BasicDatabaseModel {
   employee?: EmployeeModel;
   workShiftId?: number;
   workShift?: WorkShiftModel;
-  workCheckInDate?: Date;
-  workAttendTime?: Date;
+  date?: string;
+  workCheckIn?: string;
   workAttendStatus?: WorkAttendStatus;
   workAttendProcStatus?: CheckInProcStatus;
-  offWorkCheckInDate?: Date;
-  offWorkAttendTime?: Date;
+  offWorkCheckIn?: string;
   offWorkAttendStatus?: OffWorkAttendStatus;
   offWorkAttendProcStatus?: CheckInProcStatus;
   absenceHours?: number;

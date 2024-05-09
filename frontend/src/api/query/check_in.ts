@@ -1,6 +1,7 @@
 import { ErrorMessageMode } from '#/axios';
 import { defHttp } from '@/utils/http/axios';
 import { CheckInStatusModel } from '@/api/manager/model/checkInStatus';
+import { BasicFetchResult } from '@/api/model/baseModel';
 
 /**
  * @description 根據區間和員工ID獲取打卡狀態
@@ -10,15 +11,15 @@ import { CheckInStatusModel } from '@/api/manager/model/checkInStatus';
  */
 export function getByDateRangeAndKeywordCheckInStatus(
   params: {
-    keyword: string;
+    keyword?: string;
     dateRange: string[];
     abnormal: boolean;
-    page: number;
-    pageSize: number;
+    page?: number;
+    pageSize?: number;
   },
   mode: ErrorMessageMode = 'message',
 ) {
-  return defHttp.get<CheckInStatusModel[]>(
+  return defHttp.get<BasicFetchResult<CheckInStatusModel>>(
     {
       url: `/v1/query/checkIn/status/keyword`,
       params: {

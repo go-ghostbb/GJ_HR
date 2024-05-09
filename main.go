@@ -1,6 +1,8 @@
 package main
 
 import (
+	_ "hrms/backend/packed"
+
 	"context"
 	"embed"
 	gbjson "ghostbb.io/gb/encoding/gb_json"
@@ -35,6 +37,7 @@ func main() {
 	sysSvc := service.System()
 	updateSvc := service.Update()
 	checkInSvc := service.CheckIn()
+	excelSvs := service.Excel()
 
 	// Create application with options
 	err = wails.Run(&options.App{
@@ -58,12 +61,14 @@ func main() {
 			sysSvc.Start(ctx, wailsJSON.Get("info.productVersion").String())
 			updateSvc.Start(ctx)
 			checkInSvc.Start(ctx)
+			excelSvs.Start(ctx)
 		},
 		Bind: []interface{}{
 			// 解析service方法
 			sysSvc,
 			updateSvc,
 			checkInSvc,
+			excelSvs,
 		},
 	})
 

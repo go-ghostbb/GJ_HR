@@ -7,6 +7,13 @@ const avatarPrefixURL = `${import.meta.env.VITE_GLOB_API_URL}/assets/employee`;
 
 export const columns: BasicColumn[] = [
   {
+    title: '員工編號',
+    width: 100,
+    customRender: ({ record }) => {
+      return record.code;
+    },
+  },
+  {
     title: '姓名',
     width: 100,
     customRender: ({ record }) => {

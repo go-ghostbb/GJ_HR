@@ -380,7 +380,7 @@
    */
   const clickCopy = () => {
     copyMethod.openModal(true, {
-      schedules: scheduleData.value,
+      schedules: formatScheduleData(calenderValue.value, scheduleData.value),
       employeeId: employeeId.value,
       date: calenderValue.value,
     });

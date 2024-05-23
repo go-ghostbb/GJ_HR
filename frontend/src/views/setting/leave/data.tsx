@@ -123,6 +123,10 @@ export const formSchema: FormSchema[] = [
           value: LeaveCycle.Calendar,
           label: '歷年制（曆年制）',
         },
+        {
+          value: LeaveCycle.CalendarTwice,
+          label: '歷年制（曆年制）【按入職日拆兩次給予】',
+        },
       ],
     },
   },

@@ -11,6 +11,7 @@ export enum LeaveCycle {
   Default = 'year',
   Annual = 'annual',
   Calendar = 'calendar',
+  CalendarTwice = 'calendar_twice',
 }
 
 /**

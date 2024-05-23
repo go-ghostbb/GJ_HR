@@ -142,6 +142,8 @@
   import CopyModal from './CopyModal.vue';
   import { useModal } from '@/components/Modal';
   import DetailModal from './DetailModal.vue';
+  import { VacationScheduleModel } from '@/api/setting/model/vacationScheduleModel';
+  import { getVacationScheduleByDate } from '@/api/setting/vacation';
 
   const { prefixCls } = useDesign('work-schedule-setting-modal');
 
@@ -176,6 +178,9 @@
 
   //-schedule資料儲存
   const scheduleData = ref<WorkScheduleModel[]>([]);
+
+  //-休假日資訊
+  const vacationData = ref<VacationScheduleModel[]>([]);
 
   //-暫存資料, 取消時資料恢復用
   const cacheScheduleData = ref<WorkScheduleModel[]>([]);
@@ -412,6 +417,22 @@
    */
   const getCellData = (date: Dayjs): { color: string; text: string }[] => {
     const result: { color: string; text: string }[] = [];
+
+    //-休假日
+    vacationData.value.forEach((schedule) => {
+      const scheduleDay = dayjs(schedule.scheduleDate);
+      if (
+        scheduleDay.year() === date.year() &&
+        scheduleDay.month() === date.month() &&
+        scheduleDay.date() === date.date() &&
+        schedule.vacation
+      ) {
+        //-如果年月日相同, push結果
+        result.push({ color: schedule.vacation.color!, text: schedule.vacation.name! });
+      }
+    });
+
+    //-班表
     scheduleData.value.forEach((schedule) => {
       const scheduleDay = dayjs(schedule.scheduleDate);
       if (
@@ -438,6 +459,10 @@
       //-查詢前後一個月
       scheduleData.value = await getWorkScheduleByDate({
         employeeId: employeeId.value,
+        start: date.add(-1, 'month').format('YYYY-MM-DD'),
+        end: date.add(2, 'month').format('YYYY-MM-DD'),
+      });
+      vacationData.value = await getVacationScheduleByDate({
         start: date.add(-1, 'month').format('YYYY-MM-DD'),
         end: date.add(2, 'month').format('YYYY-MM-DD'),
       });
@@ -544,6 +569,7 @@
         }
       }
 
+      // 整個cell
       .ant-picker-cell {
         top: 0;
         height: 104px;
@@ -554,6 +580,12 @@
           width: 80%;
           border-bottom: #8b949e 1px solid;
 
+          // cell 上面的數字（日期）
+          .ant-picker-calendar-date-value {
+            //color: red;
+          }
+
+          // cell 裡面的內容
           .ant-picker-calendar-date-content {
             height: 70px;
             overflow-y: auto;

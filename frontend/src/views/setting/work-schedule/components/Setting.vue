@@ -83,6 +83,9 @@
 
           <Col>
             <!-- 非設定模式下 -->
+            <Button v-if="!isSetting" class="mr-1 mt-1" size="small" @click="clickQuick()">
+              {{ '快速設定' }}
+            </Button>
             <Button v-if="!isSetting" class="mr-1 mt-1" size="small" @click="clickCopy()">
               {{ '複製' }}
             </Button>
@@ -121,6 +124,7 @@
 
     <CopyModal @register="registerCopyModal" />
     <DetailModal ref="detailModalRef" @register="registerDetailModal" @reload="reload" />
+    <QuickSettingModal @register="registerQuickModal" @reload="reload(calenderValue)" />
   </div>
 </template>
 
@@ -142,6 +146,7 @@
   import CopyModal from './CopyModal.vue';
   import { useModal } from '@/components/Modal';
   import DetailModal from './DetailModal.vue';
+  import QuickSettingModal from './QuickSettingModal.vue';
   import { VacationScheduleModel } from '@/api/setting/model/vacationScheduleModel';
   import { getVacationScheduleByDate } from '@/api/setting/vacation';
 
@@ -154,6 +159,9 @@
 
   //-DetailModal註冊
   const [registerDetailModal, detailMethod] = useModal();
+
+  //-QuickSettingModal註冊
+  const [registerQuickModal, quickMethod] = useModal();
 
   //-loading
   const loading = ref(false);
@@ -400,6 +408,13 @@
     editMonth.value = date.month() + 1;
     //-暫存原始資料
     cacheScheduleData.value = cloneDeep(scheduleData.value);
+  };
+
+  /**
+   * @description 點擊快速設定
+   */
+  const clickQuick = () => {
+    quickMethod.openModal(true);
   };
 
   /**

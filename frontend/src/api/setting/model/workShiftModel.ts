@@ -38,3 +38,19 @@ export interface GetWorkScheduleByDateParams {
   start?: string;
   end?: string;
 }
+
+/**
+ * @description QuickSettingWorkSchedule interface parameters
+ */
+export interface QuickSettingWorkScheduleParams {
+  mon: number[];
+  tue: number[];
+  wed: number[];
+  thu: number[];
+  fri: number[];
+  sat: number[];
+  sun: number[];
+  dateRange: string[];
+  employeeId: number[];
+  ignoreVacation: boolean;
+}

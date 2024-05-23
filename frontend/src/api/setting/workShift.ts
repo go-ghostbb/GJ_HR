@@ -4,6 +4,7 @@ import { BasicFetchResult } from '../model/baseModel';
 import {
   GetWorkScheduleByDateParams,
   GetWorkShiftByKeywordParams,
+  QuickSettingWorkScheduleParams,
   WorkScheduleModel,
   WorkShiftModel,
 } from './model/workShiftModel';
@@ -114,4 +115,16 @@ export function updateWorkScheduleBatch(
  */
 export function deleteWorkSchedule(id: number, mode: ErrorMessageMode = 'message') {
   return defHttp.delete({ url: `/v1/workShift/schedule/${id}` }, { errorMessageMode: mode });
+}
+
+/**
+ * @description 快速設定班表
+ * @param params
+ * @param mode
+ */
+export function quickSettingWorkSchedule(
+  params: QuickSettingWorkScheduleParams,
+  mode: ErrorMessageMode = 'message',
+) {
+  return defHttp.put({ url: `/v1/workShift/schedule/quick`, params }, { errorMessageMode: mode });
 }

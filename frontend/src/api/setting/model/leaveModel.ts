@@ -42,3 +42,12 @@ export interface GetLeaveByKeywordParams extends BasicPageParams {
   keyword?: string;
   status?: string;
 }
+
+/**
+ * @description ResetAvailable interface parameters
+ */
+export interface ResetAvailableParams {
+  leaveId: number[];
+  employeeId: number[];
+  year: number;
+}

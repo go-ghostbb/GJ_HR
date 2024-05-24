@@ -4,7 +4,7 @@
       <template #expandedRowRender="{ record }">
         <div style="display: flex">
           <div style="width: 35%">
-            <GroupCard :leaveId="record.ID" />
+            <GroupCard :leaveId="(record as LeaveModel).ID" />
           </div>
           <div style="width: 50%">
             <AdvancedCard
@@ -16,13 +16,16 @@
       </template>
 
       <template #toolbar>
+        <Button type="primary" @click="handleReset">
+          {{ '給假' }}
+        </Button>
         <Button type="primary" @click="handleCreate">
           {{ '新增假別' }}
         </Button>
       </template>
 
       <template #bodyCell="{ column, record }">
-        <template v-if="column.key === 'action'">
+        <template v-if="(column as any).key === 'action'">
           <TableAction
             :actions="[
               {
@@ -45,7 +48,8 @@
         </template>
       </template>
     </BasicTable>
-    <LeaveModal @register="registerModal" @success="handleSuccess" />
+    <LeaveModal @register="registerLeaveModal" @success="handleSuccess" />
+    <ResetAvailableModal @register="registerResetModal" />
   </div>
 </template>
 
@@ -59,6 +63,7 @@
   import { GroupCard } from './components/GroupCard';
   import { AdvancedCard } from './components/AdvancedCard';
   import LeaveModal from './LeaveModal.vue';
+  import ResetAvailableModal from './ResetAvailableModal.vue';
   import { Button } from 'ant-design-vue';
 
   defineOptions({
@@ -66,8 +71,11 @@
     inheritAttrs: false,
   });
 
-  //-modal註冊
-  const [registerModal, { openModal }] = useModal();
+  //-LeaveModal註冊
+  const [registerLeaveModal, leaveMethod] = useModal();
+
+  //-ResetAvailableModal註冊
+  const [registerResetModal, resetModal] = useModal();
 
   //-table設定
   const [registerTable, { reload, setLoading, updateTableDataRecord }] = useTable({
@@ -95,15 +103,22 @@
    * @description 新增按鈕事件
    */
   const handleCreate = () => {
-    openModal(true, { isUpdate: false });
+    leaveMethod.openModal(true, { isUpdate: false });
+  };
+
+  /**
+   * @description 給假
+   */
+  const handleReset = () => {
+    resetModal.openModal(true);
   };
 
   /**
    * @description 編輯按鈕事件
-   * @param record: LeaveModel
+   * @param record
    */
   const handleEdit = (record: LeaveModel) => {
-    openModal(true, {
+    leaveMethod.openModal(true, {
       record,
       isUpdate: true,
     });
@@ -111,7 +126,7 @@
 
   /**
    * @description 刪除按鈕事件
-   * @param record: LeaveModel
+   * @param record
    */
   const handleDelete = (record: LeaveModel) => {
     setLoading(true);

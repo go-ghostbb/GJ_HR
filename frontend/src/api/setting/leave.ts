@@ -1,6 +1,6 @@
 import { defHttp } from '@/utils/http/axios';
 import { ErrorMessageMode } from '#/axios';
-import { GetLeaveByKeywordParams, LeaveModel } from './model/leaveModel';
+import { GetLeaveByKeywordParams, LeaveModel, ResetAvailableParams } from './model/leaveModel';
 import { BasicFetchResult } from '../model/baseModel';
 import { LeaveGroupModel } from './model/leaveGroupModel';
 import { LeaveGroupConditionModel } from './model/leaveGroupConditionModel';
@@ -147,4 +147,13 @@ export function setLeaveName(id: number, name: string, mode: ErrorMessageMode = 
     { url: `/v1/leave/group/${id}/name`, params: { name } },
     { errorMessageMode: mode },
   );
+}
+
+/**
+ * @description 重新計算可用假別
+ * @param params
+ * @param mode
+ */
+export function resetAvailable(params: ResetAvailableParams, mode: ErrorMessageMode = 'message') {
+  return defHttp.post({ url: '/v1/leave/reset/available', params }, { errorMessageMode: mode });
 }

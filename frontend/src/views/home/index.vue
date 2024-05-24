@@ -5,7 +5,7 @@
 <script lang="ts" setup>
   import { onMounted } from 'vue';
 
-  onMounted(() => {
+  onMounted(async () => {
     console.log('welcome');
   });
 </script>

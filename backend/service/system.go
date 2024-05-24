@@ -10,6 +10,7 @@ import (
 	"hrms/backend/global"
 	"hrms/backend/types"
 	"runtime"
+	"sort"
 	"sync"
 )
 
@@ -95,4 +96,29 @@ func (s *systemService) SetToken(token string) {
 func (s *systemService) SetApiUrl(url string) {
 	global.APIUrl = url
 	fmt.Println("set url:", url)
+}
+
+// GetApiUrlList 獲取api列表
+func (s *systemService) GetApiUrlList() (resp types.JSResp) {
+	result := make([]types.ApiAddress, 0)
+
+	for k, v := range global.ApiURLMap {
+		result = append(result, types.ApiAddress{k, v})
+	}
+
+	sort.SliceStable(result, func(i, j int) bool {
+		return result[i].Key < result[j].Key
+	})
+
+	return resp.OkWithData(result)
+}
+
+// SearchApiUrl 尋找api資訊
+func (s *systemService) SearchApiUrl(url string) (resp types.JSResp) {
+	for k, v := range global.ApiURLMap {
+		if v == url {
+			return resp.OkWithData(types.ApiAddress{k, v})
+		}
+	}
+	return resp.Fail("not found")
 }

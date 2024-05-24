@@ -7,6 +7,12 @@
         :show-text="false"
         v-if="!sessionTimeout && showLocale"
       />
+      <AppApiPicker
+        class="text-white enter-x xl:text-gray-600 ml-1"
+        :show-text="false"
+        reload
+        v-if="!sessionTimeout"
+      />
     </div>
 
     <span class="-enter-x xl:hidden">
@@ -67,7 +73,12 @@
   </div>
 </template>
 <script lang="ts" setup>
-  import { AppDarkModeToggle, AppLocalePicker, AppLogo } from '@/components/Application';
+  import {
+    AppDarkModeToggle,
+    AppLocalePicker,
+    AppApiPicker,
+    AppLogo,
+  } from '@/components/Application';
   import { useGlobSetting } from '@/hooks/setting';
   import { useDesign } from '@/hooks/web/useDesign';
   import { useI18n } from '@/hooks/web/useI18n';

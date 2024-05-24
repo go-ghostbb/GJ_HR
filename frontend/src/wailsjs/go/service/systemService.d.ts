@@ -3,9 +3,13 @@
 import {types} from '../models';
 import {context} from '../models';
 
+export function GetApiUrlList():Promise<types.JSResp>;
+
 export function Info():Promise<types.JSResp>;
 
 export function Latest():Promise<types.JSResp>;
+
+export function SearchApiUrl(arg1:string):Promise<types.JSResp>;
 
 export function SetApiUrl(arg1:string):Promise<void>;
 

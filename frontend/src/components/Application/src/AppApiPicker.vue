@@ -5,6 +5,9 @@
   import { useAppStore } from '@/store/modules/app';
   import { GetApiUrlList } from '@/wailsjs/go/service/systemService';
   import type { ApiAddress } from '#/store';
+  import { useLoading } from '@/components/Loading';
+  import { health } from '@/api/sys/base';
+  import { useMessage } from '@/hooks/web/useMessage';
 
   const props = defineProps({
     /**
@@ -23,6 +26,10 @@
 
   const selectedKeys = ref<string[]>([]);
 
+  const [openFullLoading, closeFullLoading] = useLoading({
+    tip: '測試連線中...',
+  });
+
   const getLocaleText = computed(() => {
     const key = selectedKeys.value[0];
     if (!key) {
@@ -31,14 +38,24 @@
     return apiList.value.find((item) => item.event === key)?.text;
   });
 
-  function handleMenuEvent(menu: DropMenu) {
-    const apiRes: { key: string; val: string } = JSON.parse(menu.event as string);
-    appStore.setApiAddress({
-      key: apiRes.key,
-      val: apiRes.val,
-    });
-    if (props.reload) {
-      location.reload();
+  async function handleMenuEvent(menu: DropMenu) {
+    openFullLoading();
+
+    try {
+      const apiRes: { key: string; val: string } = JSON.parse(menu.event as string);
+
+      //-連線測試
+      await health(apiRes.val);
+
+      appStore.setApiAddress({
+        key: apiRes.key,
+        val: apiRes.val,
+      });
+      if (props.reload) {
+        location.reload();
+      }
+    } finally {
+      closeFullLoading();
     }
   }
 

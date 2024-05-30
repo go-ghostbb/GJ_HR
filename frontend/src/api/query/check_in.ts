@@ -34,3 +34,17 @@ export function getByDateRangeAndKeywordCheckInStatus(
     { errorMessageMode: mode },
   );
 }
+
+/**
+ * @description 更新狀態表
+ * @param id
+ * @param params
+ * @param mode
+ */
+export function updateCheckInStatus(
+  id: number,
+  params: { work?: string; offWork?: string; workShiftId: number },
+  mode: ErrorMessageMode = 'message',
+) {
+  return defHttp.put({ url: `/v1/checkIn/${id}`, params }, { errorMessageMode: mode });
+}

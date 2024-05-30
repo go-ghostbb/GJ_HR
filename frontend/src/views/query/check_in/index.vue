@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { BasicTable, useTable } from '@/components/Table';
+  import { BasicTable, useTable, TableAction } from '@/components/Table';
   import { getByDateRangeAndKeywordCheckInStatus } from '@/api/query/check_in';
   import { column, searchFormSchema } from './data';
   import { Button } from 'ant-design-vue';
@@ -13,7 +13,10 @@
     CheckInProcStatus,
     OffWorkAttendStatus,
     WorkAttendStatus,
+    CheckInStatusModel,
   } from '@/api/manager/model/checkInStatus';
+  import CheckInStatusModal from './CheckInStatusModal.vue';
+  import { useModal } from '@/components/Modal';
 
   defineOptions({
     name: 'CheckInStatusQuery',
@@ -28,8 +31,11 @@
     pageSize?: number;
   }>();
 
+  //-check-in設定
+  const [registerCheckInModal, checkInMethod] = useModal();
+
   //-table設定
-  const [registerTable, { setLoading }] = useTable({
+  const [registerTable, { setLoading, reload }] = useTable({
     title: '出缺勤列表',
     beforeFetch: (params: {
       keyword?: string;
@@ -52,6 +58,12 @@
     bordered: true,
     showIndexColumn: false,
     immediate: false,
+    actionColumn: {
+      width: 40,
+      title: '操作',
+      dataIndex: 'action',
+      fixed: undefined,
+    },
   });
 
   /**
@@ -166,16 +178,50 @@
 
     setLoading(false);
   };
+
+  /**
+   * @description 編輯
+   * @param record
+   */
+  const handleEdit = (record: CheckInStatusModel) => {
+    checkInMethod.openModal(true, { record });
+  };
+
+  /**
+   * @description success
+   */
+  const handleSuccess = () => {
+    useMessage().createMessage.success({ content: '操作成功' });
+    reload();
+  };
 </script>
 
 <template>
-  <BasicTable @register="registerTable">
-    <template #toolbar>
-      <Button type="primary" @click="exportExcel">
-        {{ '匯出excel' }}
-      </Button>
-    </template>
-  </BasicTable>
+  <div>
+    <BasicTable @register="registerTable">
+      <template #toolbar>
+        <Button type="primary" @click="exportExcel">
+          {{ '匯出excel' }}
+        </Button>
+      </template>
+
+      <template #bodyCell="{ column, record }">
+        <template v-if="(column as any).key === 'action'">
+          <TableAction
+            :actions="[
+              {
+                tooltip: '編輯',
+                icon: 'clarity:note-edit-line',
+                onClick: handleEdit.bind(null, record as CheckInStatusModel),
+              },
+            ]"
+          />
+        </template>
+      </template>
+    </BasicTable>
+
+    <CheckInStatusModal @register="registerCheckInModal" @success="handleSuccess" />
+  </div>
 </template>
 
 <style scoped lang="less"></style>

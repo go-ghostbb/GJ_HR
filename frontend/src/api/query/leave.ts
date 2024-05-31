@@ -20,3 +20,17 @@ export function getLeaveCorrectByKeyword(
     { errorMessageMode: mode },
   );
 }
+
+/**
+ * @description 更新leave correct
+ * @param id
+ * @param params
+ * @param mode
+ */
+export function updateLeaveCorrect(
+  id: number,
+  params: { effective?: string; expired?: string; available?: number },
+  mode: ErrorMessageMode = 'message',
+) {
+  return defHttp.put({ url: `/v1/leaveCorrect/${id}`, params }, { errorMessageMode: mode });
+}

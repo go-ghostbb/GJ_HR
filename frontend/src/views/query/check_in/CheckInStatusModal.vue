@@ -20,8 +20,10 @@
     offWork: '',
   });
 
+  //-form ref
   const formRef = ref<FormInstance>();
 
+  //-check-in id
   const id = ref(0);
 
   //-modal入口

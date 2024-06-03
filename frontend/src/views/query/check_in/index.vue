@@ -1,6 +1,6 @@
 <script setup lang="ts">
   import { BasicTable, useTable, TableAction } from '@/components/Table';
-  import { getByDateRangeAndKeywordCheckInStatus } from '@/api/query/check_in';
+  import { filingCheckInStatus, getByDateRangeAndKeywordCheckInStatus } from '@/api/query/check_in';
   import { column, searchFormSchema } from './data';
   import { Button } from 'ant-design-vue';
   import { ref } from 'vue';
@@ -17,6 +17,7 @@
   } from '@/api/manager/model/checkInStatus';
   import CheckInStatusModal from './CheckInStatusModal.vue';
   import { useModal } from '@/components/Modal';
+  import { LeaveModel } from '@/api/setting/model/leaveModel';
 
   defineOptions({
     name: 'CheckInStatusQuery',
@@ -59,7 +60,7 @@
     showIndexColumn: false,
     immediate: false,
     actionColumn: {
-      width: 40,
+      width: 80,
       title: '操作',
       dataIndex: 'action',
       fixed: undefined,
@@ -194,6 +195,26 @@
     useMessage().createMessage.success({ content: '操作成功' });
     reload();
   };
+
+  /**
+   * @description recalc
+   * @param record
+   */
+  const handleReCalc = async (record: CheckInStatusModel) => {
+    setLoading(true);
+    try {
+      //-api
+      await filingCheckInStatus({
+        employeeId: [record.employeeId!],
+        dateRange: [record.date!, record.date!],
+      });
+
+      //-success
+      handleSuccess();
+    } finally {
+      setLoading(false);
+    }
+  };
 </script>
 
 <template>
@@ -209,6 +230,15 @@
         <template v-if="(column as any).key === 'action'">
           <TableAction
             :actions="[
+              {
+                tooltip: '重新計算',
+                icon: 'ant-design:calculator-outlined',
+                popConfirm: {
+                  title: 'Confirm?',
+                  placement: 'left',
+                  confirm: handleReCalc.bind(null, record as LeaveModel),
+                },
+              },
               {
                 tooltip: '編輯',
                 icon: 'clarity:note-edit-line',

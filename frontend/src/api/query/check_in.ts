@@ -48,3 +48,15 @@ export function updateCheckInStatus(
 ) {
   return defHttp.put({ url: `/v1/checkIn/${id}`, params }, { errorMessageMode: mode });
 }
+
+/**
+ * @description 重新計算狀態
+ * @param params
+ * @param mode
+ */
+export function filingCheckInStatus(
+  params: { employeeId: number[]; dateRange: string[] },
+  mode: ErrorMessageMode = 'message',
+) {
+  return defHttp.post({ url: `/v1/checkInStatus/filing`, params }, { errorMessageMode: mode });
+}

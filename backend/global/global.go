@@ -11,5 +11,6 @@ var (
 	ApiURLMap = g.MapStrStr{
 		"development": "http://localhost:9000",
 		"it_dev":      "http://192.168.1.206:9000",
+		"factory":     "http://192.168.1.207:9000",
 	}
 )
